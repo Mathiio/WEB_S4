@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'bold';
+    src: url("/fonts/Inter-Bold.woff2") format("woff2");
+}
+@font-face {
+    font-family: 'light';
+    src: url("/fonts/Inter-Light.woff2") format("woff2");
+}
+@font-face {
+    font-family: 'regular';
+    src: url("/fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+    font-family: 'medium';
+    src: url("/fonts/Inter-Medium.woff2") format("woff2");
+}
+:root {
+    --first-color: hsl(359, 100%, 50%);
+    --first-color-alt: hsl(359, 100%, 46%);
+    --second-color: hsl(0, 0%, 75%);
+    --second-color-alt: hsl(0, 0%, 20%);
+    --third-color: hsl(0, 0%, 95%);
+
+    --max-size: 2.5rem;
+    --mid-size: 1.4rem;
+    --min-size: 1rem;
+    --max-line: 2.5rem;
+    --mid-line: 1.4rem;
+    --min-line: 1rem;
+
+    --max-space: 50px;
+    --big-space: 30px;
+    --mid-space: 16px;
+    --min-space: 10px;
+    --max-radius: 35px;
+    --mid-radius: 20px;
+    --min-radius: 10px;
+    --max-width: 1300px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    width:100%;
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: wrap;
+}
+#app{
+    width:100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
