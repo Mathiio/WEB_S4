@@ -27,6 +27,10 @@ const router = createRouter({
   routes, 
 })
 
+const app = createApp(App)
 
-createApp(App).use(router).mount('#app')
+
+app.use(router)
+
+app.mount('#app')
 
