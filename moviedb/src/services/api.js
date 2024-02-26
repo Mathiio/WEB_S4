@@ -99,7 +99,35 @@ async function getGenres() {
 
 
 
+async function getRandomGenre() {
+  try {
+      const genres = await getGenres();
+      const randomIndex = Math.floor(Math.random() * genres.length);
+      return genres[randomIndex];
+  } catch (error) {
+      console.error('Erreur lors de la sélection d\'un genre aléatoire:', error);
+  }
+}
 
 
 
-export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getGenres } 
+async function getMoviesByGenre(genreId, movies_number) {
+  try {
+      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&with_genres=${genreId}&language=fr-FR`);
+      if (!response.ok) {
+          throw new Error('Erreur lors de la requête');
+      }
+      const data = await response.json();
+      const sortedMovies = data.results.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+
+      const limitedMovies = sortedMovies.slice(0, movies_number);
+      return limitedMovies;
+  } catch (error) {
+      console.error('Erreur lors de la récupération des films par genre:', error);
+  }
+}
+
+
+
+
+export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getGenres, getRandomGenre, getMoviesByGenre } 

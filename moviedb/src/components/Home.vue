@@ -26,7 +26,7 @@
     </section>
     <section>
         <div class="head_slider">
-            <h1>Dernières sorties</h1>
+            <h1>Les sorties toutes fraiches</h1>
             <router-link to="/News">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div class="wrapper">
