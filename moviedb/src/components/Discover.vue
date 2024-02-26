@@ -19,7 +19,7 @@
         </div>
         <input class="search_film" type="text" placeholder=" Rechercher un film" v-model="searchQuery" @input="searchMedias">
         <div class="show_medias">
-            <article v-for="media in filteredMedias" :key="media.id"  @click="redirectToMedia(media.id)" class="splide__slide" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'">
+            <article v-for="media in filteredMedias" :key="media.id"  @click="redirectToMedia(media.id)" class="splide__slide" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                 <div class="gradient">
                     <h3>{{ media.title }}</h3>
                     <span>
@@ -157,6 +157,10 @@ article{
 
 
 <script>
+import { getImageUrl, formatDate } from '@services/utils.js'
+import { getGenres } from '@services/api.js'
+
+
 export default {
     data() {
         return {
@@ -168,23 +172,14 @@ export default {
         };
     },
     created() {
-        this.fetchGenres();
+        this.retrieveGenres();
     },
     methods: {
         redirectToMedia(mediaId) {
             this.$router.push({ name: 'MoviePrev', params: { id: mediaId } });
         },
-        async fetchGenres() {
-            try {
-                const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_API_KEY}&language=fr`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
-                }
-                const data = await response.json();
-                this.genres = data.genres;
-            } catch (error) {
-                console.error('Erreur lors du fetch des genres:', error);
-            }
+        async retrieveGenres() {
+            this.genres =  await getGenres()
         },
         async searchMedias(event) {
             const query = event.target.value.trim();
@@ -210,12 +205,8 @@ export default {
                 return medias.filter(media => media.genre_ids.includes(this.selectedGenre)); 
             }
         },
-        getImageUrl(posterPath) {
-        return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : ''; 
-        },
-        formatDate(dateString) {
-            return dateString ? new Date(dateString).toLocaleDateString('fr-FR') : '';
-        },
+        getImageUrl,
+        formatDate,
         sortMedias(medias) {
             const sortedMedias = [...medias]; 
 
@@ -226,7 +217,6 @@ export default {
                     return b.title.localeCompare(a.title);
                 }
             });
-
             return sortedMedias;
         },
     },

@@ -97,6 +97,9 @@ h1{
 
 
 <script>
+import { getMovie } from '@services/api.js'
+import { getImageUrl, formatDate } from '@services/utils.js'
+
 export default {
     data() {
         return {
@@ -105,27 +108,14 @@ export default {
     },
     created() {
         const movieId = this.$route.params.id;
-        this.fetchMovieDetails(movieId);
+        this.retrieveMovie(movieId);
     },
     methods: {
-        async fetchMovieDetails(movieId) {
-            try {
-                const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${import.meta.env.VITE_API_KEY}&penv&language=fr`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
-                }
-                const data = await response.json();
-                this.movie = data;
-            } catch (error) {
-                console.error('Erreur lors de la récupération des détails du film:', error);
-            }
+        async retrieveMovie(movieId) {
+            this.movie = await getMovie(movieId);
         },
-        getImageUrl(posterPath) {
-            return posterPath ? `https://image.tmdb.org/t/p/original${posterPath}` : ''; 
-        },
-        formatDate(dateString) {
-            return dateString ? new Date(dateString).toLocaleDateString('en-US') : '';
-        }
+        getImageUrl,
+        formatDate,
     }
 }
 </script>

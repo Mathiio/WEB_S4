@@ -79,6 +79,9 @@
                 <li v-for="media in filteredMedias.slice(0, 5)" :key="media.id">{{ media.title }}</li>
             </ul>
         </div>
+        <div v-if="loading">
+            <p>Chargement en cours...</p>
+        </div>
     </section>
 </template>
   
@@ -341,9 +344,10 @@ form{
 
 
 <script>
-import Splide from '@splidejs/splide';
-import '@splidejs/splide/dist/css/splide.min.css';
-
+import Splide from '@splidejs/splide'
+import '@splidejs/splide/dist/css/splide.min.css'
+import { getMovieRuntime, getGenres } from '@services/api.js'
+import { initSlider } from '@services/utils.js'
 
 
 
@@ -360,11 +364,12 @@ export default {
                 old: false,
                 young: false,
                 none: false
-            }
+            },
+            loading: false,
         };
     },
     created() {
-        this.fetchGenres();
+        this.retrieveGenres();
     },
     mounted() {
         this.$el.style.setProperty('--slider-value', `${this.sliderValue}`);
@@ -375,32 +380,14 @@ export default {
         }
     },
     methods: {
-        async fetchGenres() {
-            try {
-                const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_API_KEY}&language=fr`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
-                }
-                const data = await response.json();
-                this.genres = data.genres;
-                this.initSplideGenre();
-            } catch (error) {
-                console.error('Erreur lors du fetch des genres:', error);
-            }
+        async retrieveGenres() {
+            this.genres =  await getGenres()
+            setTimeout(() => {
+                this.initSlider('splide_genre');
+            }, 10);
         },
-        async getMovieRuntime(movieId) {
-            try {
-                const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${import.meta.env.VITE_API_KEY}`);
-                if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-                }
-                const data = await response.json();
-                return data.runtime;
-            } catch (error) {
-                console.error('Erreur lors de la récupération du runtime du film:', error);
-                return null;
-            }
-        },
+        getMovieRuntime,
+        initSlider,
         async filterByRuntime(medias) {
             const filteredMedias = [];
             for (const media of medias) {
@@ -417,6 +404,7 @@ export default {
         },
         async submitForm() {
             try {
+                this.loading = true;
                 const selectedGenres = this.selectedGenres.join(',');
                 let url = `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&with_genres=${selectedGenres}`;
 
@@ -437,27 +425,10 @@ export default {
                 const filteredByRuntime = this.filterByRuntime(this.sortedMedias);
                 this.searchedMedias = await filteredByRuntime;
                 console.log(this.searchedMedias);
+                this.loading = false;
             } catch (error) {
                 console.error('Erreur lors de la recherche de films:', error);
             }
-        },
-        initSplideGenre(){
-            setTimeout(() => {
-                const splide_genre = document.getElementById('splide_genre');
-
-                new Splide(splide_genre, {
-                    type: 'loop',
-                    perMove: 1,
-                    autoWidth: true,
-                    pagination: false,
-                    breakpoints: {
-                        740: {
-                            type: 'loop',
-                            focus: 'center'
-                        },
-                    }
-                }).mount();
-            }, 10);
         },
     },
     computed: {

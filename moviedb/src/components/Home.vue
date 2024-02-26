@@ -8,7 +8,7 @@
             <div class="splide" id="splide">
                 <div class="splide__track">
                     <div class="splide__list">
-                        <article v-for="movie in limitedTrendMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
+                        <article v-for="movie in trendMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
                             class="splide__slide accueil_trend"
                             :style="'background:url(' + getImageUrl(movie.backdrop_path) + ') center center; background-size: cover;'">
                             <div class="gradient">
@@ -33,9 +33,9 @@
             <div class="splide" id="splide2">
                 <div class="splide__track">
                     <div class="splide__list">
-                        <article v-for="movie in limitedLatestMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
+                        <article v-for="movie in latestMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
                             class="splide__slide accueil_news"
-                            :style="'background:url(' + getImageUrl(movie.poster_path) + ') center center; background-size: cover;'">
+                            :style="'background:url(' + getImageUrl(movie.backdrop_path) + ') center center; background-size: cover;'">
                             <div class="gradient">
                                 <h3>{{ movie.title }}</h3>
                                 <span>
@@ -182,10 +182,8 @@ article {
 
 
 <script>
-import Splide from '@splidejs/splide';
-import '@splidejs/splide/dist/css/splide.min.css';
-import { fetchTrendMovies } from '@services/api.js'
-
+import { getTrendMovies, getLatestMovies } from '@services/api.js'
+import { initSlider, getImageUrl, formatDate } from '@services/utils.js'
 
 
 export default {
@@ -193,12 +191,10 @@ export default {
     return {
       trendMovies: [],
       latestMovies: [],
-      limitTrend: 6,
-      limitLatest: 12,
     };
   },
   created() {
-    this.fetchLatestMovies();
+    this.retrieveLatestMovies();
     this.retrieveTrendMovies();
   },
   methods: {
@@ -206,75 +202,20 @@ export default {
         this.$router.push({ name: 'MoviePrev', params: { id: movieId } });
     },
     async retrieveTrendMovies() {
-        this.trendMovies = await fetchTrendMovies()
-        this.initSplide()
-    },
-    async fetchLatestMovies() {
-        try {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&primary_release_year=2024`);
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
-            }
-            const data = await response.json();
-            this.latestMovies = data.results; 
-            this.initSplide2();
-        } catch (error) {
-            console.error('Erreur lors du fetch de la requête:', error);
-        }
-    },
-    getImageUrl(posterPath) {
-        return posterPath ? `https://image.tmdb.org/t/p/original${posterPath}` : ''; 
-    },
-    formatDate(dateString) {
-        return dateString ? new Date(dateString).toLocaleDateString('fr-FR') : '';
-    },
-    initSplide() {
+        this.trendMovies = await getTrendMovies(2,8)
         setTimeout(() => {
-            const splideElement = document.getElementById('splide');
-
-            new Splide(splideElement, {
-            type   : 'loop',
-            perMove: 1,
-            autoWidth: true,
-            pagination: false,
-            breakpoints: {
-                740: {
-                    type   : 'loop',
-                    focus : 'center'
-                },
-            }
-            }).mount();
-        }, 10);
+            this.initSlider('splide')
+        }, 10); 
     },
-    initSplide2() {
+    async retrieveLatestMovies() {
+        this.latestMovies = await getLatestMovies(12)
         setTimeout(() => {
-            const splideElement = document.getElementById('splide2');
-
-            new Splide(splideElement, {
-            type   : 'loop',
-            perMove: 1,
-            autoWidth: true,
-            pagination: false,
-            breakpoints: {
-                740: {
-                    type   : 'loop',
-                    focus : 'center'
-                },
-            }
-            }).mount();
-        }, 10);
+            this.initSlider('splide2')
+        }, 10); 
     },
-  },
-  computed: {
-    limitedTrendMovies() {
-        return this.trendMovies.slice(0, this.limitTrend);
-    },
-    limitedLatestMovies() {
-        return this.latestMovies.slice(0, this.limitLatest);
-    }
+    getImageUrl,
+    formatDate,
+    initSlider,
   }
 }
 </script>
-
-
-
