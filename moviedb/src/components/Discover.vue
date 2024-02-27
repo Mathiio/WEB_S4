@@ -1,6 +1,6 @@
 <template>
     <section>
-        <h1>Une idée de film en tête ?</h1>
+        <h1>{{ selectedMedia === 'films' ? 'Une idée de film en tête ?' : 'Une idée de série en tête ?' }}</h1>
         <div class="selectors">
             <div class="select_box">
                 <label for="genre">Genre</label>
@@ -17,7 +17,7 @@
                 </select>
             </div>
         </div>
-        <input class="search_film" type="text" placeholder=" Rechercher un film" v-model="searchQuery" @input="searchMedias">
+        <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="searchMedias">
         <div class="show_medias">
             <article v-for="media in filteredMedias" :key="media.id"  @click="redirectToMedia(media.id)" class="splide__slide" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                 <div class="gradient">
@@ -162,6 +162,9 @@ import { getGenres } from '@services/api.js'
 
 
 export default {
+    props: {
+        selectedMedia: String 
+    },
     data() {
         return {
             genres: [],

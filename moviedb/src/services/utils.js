@@ -33,6 +33,22 @@ function formatDate(dateString) {
 }
 
 
+/*
+function getAPIFacade(entityType)
+if (movies) 
+  return {
+    getEntity: getMovies
+    get
+  }
 
+else 
+{
+  getEntity: getSeries
+}
+
+
+ getEntityAPI()
+
+ */
 
 export{ initSlider, formatDate, getImageUrl }

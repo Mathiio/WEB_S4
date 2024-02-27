@@ -1,8 +1,8 @@
 <template>
     <nav>
         <div>
-            <button :class="{ 'active_media': selectedTab === 'films' }" @click="selectTab('films')">Films</button>
-            <button :class="{ 'active_media': selectedTab === 'series' }" @click="selectTab('series')">Séries</button>
+            <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')">Films</button>
+            <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')">Séries</button>
         </div>
         <router-link  to="/match">Match ton film</router-link>
     </nav>
@@ -69,12 +69,13 @@ a:hover{
 export default {
     data() {
         return {
-            selectedTab: 'films' 
+            selectedMedia: 'films' 
         };
     },
     methods: {
-        selectTab(tab) {
-            this.selectedTab = tab; 
+        selectMedia(media) {
+            this.selectedMedia = media;
+            this.$emit('media-selected', media);
         }
     }
 }

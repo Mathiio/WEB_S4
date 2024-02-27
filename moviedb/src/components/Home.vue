@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="head_slider">
-            <h1>Tendances actuelles</h1>
+            <h1>{{ selectedMedia === 'films' ? 'Tendances actuelles' : 'Tendances sur les séries' }}</h1>
             <router-link to="/Ratted">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div class="wrapper">
@@ -187,6 +187,9 @@ import { initSlider, getImageUrl, formatDate } from '@services/utils.js'
 
 
 export default {
+  props: {
+    selectedMedia: String 
+  },
   data() {
     return {
       trendMovies: [],

@@ -1,15 +1,10 @@
-<script setup>
-import Aside from '@components/Aside.vue'
-import NavBar from '@components/NavBar.vue'
-</script>
-
 <template>
   <header>
     <Aside> </Aside>
   </header>
   <main>
-    <NavBar />
-    <router-view>
+    <NavBar  @media-selected="updateSelectedMedia" />
+    <router-view :selected-media="selectedMedia">
 
     </router-view>
   </main>
@@ -25,7 +20,11 @@ main {
 }
 </style>
 
-<script>
+<script setup>
+import Aside from '@components/Aside.vue'
+import NavBar from '@components/NavBar.vue'
+import { ref } from 'vue'
+
   function adjustMainWidth() {
     var headerWidth = document.querySelector('header').offsetWidth;
     document.querySelector('main').style.width = `calc(100% - ${headerWidth}px)`;
@@ -33,4 +32,10 @@ main {
 
   window.onload = adjustMainWidth;
   window.onresize = adjustMainWidth;
+
+  const selectedMedia = ref('films');
+
+  function updateSelectedMedia(media) {
+    selectedMedia.value = media;
+  }
 </script>

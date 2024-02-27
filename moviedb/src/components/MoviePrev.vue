@@ -112,6 +112,9 @@ export default {
     },
     methods: {
         async retrieveMovie(movieId) {
+        //     $route.query.entity
+        //    { getEntity } getEntityType(entitytype)
+        //     this.movie = await getEntity(movieId);
             this.movie = await getMovie(movieId);
         },
         getImageUrl,
