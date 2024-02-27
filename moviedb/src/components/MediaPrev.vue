@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <section>
         <template v-if="movie">
             <img :src="getImageUrl(movie.poster_path)" alt="">
@@ -121,4 +121,5 @@ export default {
         formatDate,
     }
 }
-</script>
+</script> -->
+<template></template>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <section>
         <div class="head_slider">
             <h1>Les sorties toutes fraiches</h1>
@@ -220,4 +220,5 @@ export default {
     initSlider,
   }
 }
-</script>
+</script> -->
+<template></template>

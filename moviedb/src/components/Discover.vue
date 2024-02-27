@@ -158,7 +158,7 @@ article{
 
 <script>
 import { getImageUrl, formatDate } from '@services/utils.js'
-import { getGenres } from '@services/api.js'
+import { getEntityAPI } from '@services/interface.js';
 
 
 export default {
@@ -182,7 +182,8 @@ export default {
             this.$router.push({ name: 'MoviePrev', params: { id: mediaId } });
         },
         async retrieveGenres() {
-            this.genres =  await getGenres()
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            this.genres = await entityAPI.getGenres();
         },
         async searchMedias(event) {
             const query = event.target.value.trim();

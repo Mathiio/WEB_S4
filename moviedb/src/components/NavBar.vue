@@ -4,7 +4,7 @@
             <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')">Films</button>
             <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')">Séries</button>
         </div>
-        <router-link  to="/match">Match ton film</router-link>
+        <router-link  to="/match">{{ selectedMedia === 'films' ? 'Match ton film' : 'Match ta série' }}</router-link>
     </nav>
 </template>
 

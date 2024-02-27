@@ -8,14 +8,14 @@
             <div class="splide" id="splide">
                 <div class="splide__track">
                     <div class="splide__list">
-                        <article v-for="movie in trendMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
+                        <article v-for="media in trendMedias" :key="media.id" @click="redirectToMedia(media.id)"
                             class="splide__slide accueil_trend"
-                            :style="'background:url(' + getImageUrl(movie.backdrop_path) + ') center center; background-size: cover;'">
+                            :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                             <div class="gradient">
-                                <h3>{{ movie.title }}</h3>
+                                <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
                                 <span>
-                                    <p class="date">{{ formatDate(movie.release_date) }}</p>
-                                    <p class="vote">{{ movie.vote_average }} <ion-icon name="star"></ion-icon></p>
+                                    <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                                    <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
                                 </span>
                             </div>
                         </article>
@@ -33,14 +33,14 @@
             <div class="splide" id="splide2">
                 <div class="splide__track">
                     <div class="splide__list">
-                        <article v-for="movie in latestMovies" :key="movie.id" @click="redirectToMovie(movie.id)"
+                        <article v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)"
                             class="splide__slide accueil_news"
-                            :style="'background:url(' + getImageUrl(movie.backdrop_path) + ') center center; background-size: cover;'">
+                            :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                             <div class="gradient">
-                                <h3>{{ movie.title }}</h3>
+                                <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
                                 <span>
-                                    <p class="date">{{ formatDate(movie.release_date) }}</p>
-                                    <p class="vote">{{ movie.vote_average }} <ion-icon name="star"></ion-icon></p>
+                                    <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                                    <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
                                 </span>
                             </div>
                         </article>
@@ -182,8 +182,8 @@ article {
 
 
 <script>
-import { getTrendMovies, getLatestMovies } from '@services/api.js'
 import { initSlider, getImageUrl, formatDate } from '@services/utils.js'
+import { getEntityAPI } from '@services/interface.js';
 
 
 export default {
@@ -192,26 +192,39 @@ export default {
   },
   data() {
     return {
-      trendMovies: [],
-      latestMovies: [],
+      trendMedias: [],
+      latestMedias: [],
     };
   },
   created() {
-    this.retrieveLatestMovies();
-    this.retrieveTrendMovies();
+    this.retrieveLatestMedias();
+    this.retrieveTrendMedias();
+  },
+  watch: {
+    selectedMedia: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.retrieveTrendMedias();
+          this.retrieveLatestMedias();
+        }
+      }
+    }
   },
   methods: {
-    redirectToMovie(movieId) {
-        this.$router.push({ name: 'MoviePrev', params: { id: movieId } });
+    redirectToMedia(mediaId) {
+        this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
     },
-    async retrieveTrendMovies() {
-        this.trendMovies = await getTrendMovies(2,8)
+    async retrieveTrendMedias() {
+        const entityAPI = getEntityAPI(this.selectedMedia);
+        this.trendMedias = await entityAPI.getTrend(2,8,25);
         setTimeout(() => {
             this.initSlider('splide')
         }, 10); 
     },
-    async retrieveLatestMovies() {
-        this.latestMovies = await getLatestMovies(12)
+    async retrieveLatestMedias() {
+        const entityAPI = getEntityAPI(this.selectedMedia);
+        this.latestMedias = await entityAPI.getLatest(10,25);
         setTimeout(() => {
             this.initSlider('splide2')
         }, 10); 

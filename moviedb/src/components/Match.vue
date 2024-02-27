@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <section>
         <h1>Trouve ton match parfait !</h1>
         <form @submit.prevent="submitForm">
@@ -438,4 +438,5 @@ export default {
     }
 };
 </script>
-  
+   -->
+   <template></template>

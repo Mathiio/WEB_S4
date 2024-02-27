@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>MatchYourMovie</h2>
+        <h2>MatchYourMedia</h2>
         <ul>
             <li>   
                 <router-link  to="/"><ion-icon name="home"></ion-icon>Accueil</router-link>
