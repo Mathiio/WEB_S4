@@ -65,6 +65,7 @@
   border-radius: var(--max-radius);
   margin-right: var(--big-space) !important;
   position: relative;
+  overflow: hidden;
 }
 .skeleton_trend{
     background-color: rgba(236, 236, 236, 0.6);
@@ -72,6 +73,7 @@
     height: 300px;
     border-radius: var(--max-radius);
     position: relative;
+    overflow: hidden;
 }
 .skeleton_trend::after, .skeleton_news::after {
     position: absolute;
@@ -250,7 +252,7 @@ export default {
         this.loadingTrend = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.trendMedias = await entityAPI.getTrend(2, 8, 25);
+            this.trendMedias = await entityAPI.getTrend(3, 8, 50);
         } finally {
             this.loadingTrend = false;
         }
@@ -259,7 +261,7 @@ export default {
         this.loadingLatest = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.latestMedias = await entityAPI.getLatest(10, 25);
+            this.latestMedias = await entityAPI.getLatest(10, 50);
         } finally {
             this.loadingLatest = false;
         }

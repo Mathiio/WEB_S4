@@ -1,3 +1,7 @@
+import { getDate } from '@services/utils.js'
+
+
+
 async function getTrendMovies(month_include, movies_number, max_page) {
     try {
         let trendMovies = [];
@@ -9,15 +13,11 @@ async function getTrendMovies(month_include, movies_number, max_page) {
             }
             const data = await response.json();
 
-            let date = new Date();
-            date.setMonth(date.getMonth() - month_include);
-            let year = date.getFullYear();
-            let month = String(date.getMonth() + 1).padStart(2, '0');
-            let day = String(date.getDate()).padStart(2, '0');
-            let formattedDate = `${year}-${month}-${day}`;
-            const filteredMovies = data.results.filter(movie => movie.release_date >= formattedDate);
+            const limitDate = await getDate(month_include);
+            const filteredByDate = data.results.filter(movie => movie.release_date >= limitDate)
+            const filteredByVote = filteredByDate.filter(movie => movie.vote_count >= 10)
 
-            trendMovies.push(...filteredMovies);
+            trendMovies.push(...filteredByVote);
 
             if (max_page > data.total_pages) {
                 max_page = data.total_pages
@@ -45,12 +45,8 @@ async function getLatestMovies(movies_number, max_page) {
             }
             const data = await response.json();
 
-            let date = new Date();
-            let year = date.getFullYear();
-            let month = String(date.getMonth() + 1).padStart(2, '0');
-            let day = String(date.getDate()).padStart(2, '0');
-            let formattedDate = `${year}-${month}-${day}`;
-            const filteredMovies = data.results.filter(movie => movie.release_date <= formattedDate);
+            const limitDate = await getDate(0)
+            const filteredMovies = data.results.filter(movie => movie.release_date <= limitDate);
 
             latestMovies.push(...filteredMovies);
 
@@ -156,9 +152,9 @@ async function getMoviesGenres() {
 
 
 
-async function getRandomGenre() {
+async function getMoviesRandomGenre() {
   try {
-      const genres = await getGenres();
+      const genres = await getMoviesGenres();
       const randomIndex = Math.floor(Math.random() * genres.length);
       return genres[randomIndex];
   } catch (error) {
@@ -168,23 +164,40 @@ async function getRandomGenre() {
 
 
 
-async function getMoviesByGenre(genreId, movies_number) {
-  try {
-      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&with_genres=${genreId}&language=fr-FR`);
-      if (!response.ok) {
-          throw new Error('Erreur lors de la requête');
-      }
-      const data = await response.json();
-      const sortedMovies = data.results.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+async function getLatestGenreMovies(genreId, movies_number, max_page) {
+    try {
+        let latestMovies = [];
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
 
-      const limitedMovies = sortedMovies.slice(0, movies_number);
-      return limitedMovies;
-  } catch (error) {
-      console.error('Erreur lors de la récupération des films par genre:', error);
-  }
+            const currentDate = await getDate(0);
+            const filteredByDate = data.results.filter(movie => currentDate >= movie.release_date)
+
+            const filteredByGenre = filteredByDate.filter(movie => {
+                return movie.genre_ids.includes(genreId.id);
+            });
+
+            latestMovies.push(...filteredByGenre);
+
+            if (max_page > data.total_pages) {
+                max_page = data.total_pages
+            }
+        }
+        latestMovies.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        latestMovies = latestMovies.slice(0, movies_number);
+        console.log(latestMovies)
+        return latestMovies;
+    }
+    catch (error) {
+        console.error('Erreur lors du fetch de la requête:', error);
+    }
 }
 
 
 
 
-export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getMoviesGenres, getRandomGenre, getMoviesByGenre, searchMovie, sortMovies } 
+export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getMoviesGenres, getMoviesRandomGenre, getLatestGenreMovies, searchMovie, sortMovies } 

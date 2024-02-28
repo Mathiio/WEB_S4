@@ -1,22 +1,22 @@
-<!-- <template>
+<template>
     <section>
-        <template v-if="movie">
-            <img :src="getImageUrl(movie.poster_path)" alt="">
+        <template v-if="media">
+            <img :src="getImageUrl(media.poster_path)" alt="">
             <div class="media_data">
                 <div class="quick_infos">
-                    <p>{{ movie.runtime }} min</p>
-                    <p>{{ movie.release_date }}</p>
-                    <p>{{ movie.vote_average }}/10</p>
+                    <p>{{ selectedMedia === 'films' ? media.runtime+" min" : media.number_of_episodes+" épisodes" }}</p>
+                    <p>{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                    <p>{{ media.vote_average }}/10</p>
                 </div>
-                <h1>{{ movie.title }}</h1>
-                <p class="overview">{{ movie.overview }}</p>
+                <h1>{{ selectedMedia === 'films' ? media.title : media.name }}</h1>
+                <p class="overview">{{ media.overview }}</p>
                 <div class="media_genres">
-                    <p v-for="genre in movie.genres" :key="genre.id">{{ genre.name }}</p>
+                    <p v-for="genre in media.genres" :key="genre.id">{{ genre.name }}</p>
                 </div>
             </div>
         </template>
         <template v-else>
-            <p>Chargement du film...</p>
+            <p>Chargement du média...</p>
         </template>
     </section>
 </template>
@@ -97,29 +97,30 @@ h1{
 
 
 <script>
-import { getMovie } from '@services/api.js'
+import { getEntityAPI } from '@services/interface.js'
 import { getImageUrl, formatDate } from '@services/utils.js'
 
 export default {
+    props: {
+        selectedMedia: String 
+    },
     data() {
         return {
-            movie: null
+            media: null
         };
     },
     created() {
-        const movieId = this.$route.params.id;
-        this.retrieveMovie(movieId);
+        const mediaId = this.$route.params.id;
+        this.retrieveMedia(mediaId);
     },
     methods: {
-        async retrieveMovie(movieId) {
-        //     $route.query.entity
-        //    { getEntity } getEntityType(entitytype)
-        //     this.movie = await getEntity(movieId);
-            this.movie = await getMovie(movieId);
+        async retrieveMedia(mediaId) {
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            this.media = await entityAPI.getMedia(mediaId);
+            console.log(this.media);
         },
         getImageUrl,
         formatDate,
     }
 }
-</script> -->
-<template></template>
+</script>

@@ -1,5 +1,5 @@
-import { getTrendMovies, getLatestMovies, getMoviesGenres, searchMovie, sortMovies } from '@services/moviesAPI.js';
-import { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries } from '@services/seriesAPI.js';
+import { getTrendMovies, getLatestMovies, getMoviesGenres, searchMovie, sortMovies, getMovie, getLatestGenreMovies, getMoviesRandomGenre } from '@services/moviesAPI.js';
+import { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries, getSerie, getLatestGenreSeries, getSeriesRandomGenre } from '@services/seriesAPI.js';
 
 export function getEntityAPI(entityType) {
   if (entityType === 'films') {
@@ -9,6 +9,9 @@ export function getEntityAPI(entityType) {
       getGenres: getMoviesGenres,
       searchMedia: searchMovie,
       sortMedias: sortMovies,
+      getMedia: getMovie,
+      getLatestGenre: getLatestGenreMovies,
+      getRandomGenre: getMoviesRandomGenre,
     };
   } else if (entityType === 'series') {
     return {
@@ -16,7 +19,9 @@ export function getEntityAPI(entityType) {
       getLatest: getLatestSeries,
       getGenres: getSeriesGenres,
       searchMedia: searchSerie,
-      sortMedias: sortSeries,
+      getMedia: getSerie,
+      getLatestGenre: getLatestGenreSeries,
+      getRandomGenre: getSeriesRandomGenre,
     };
   } else {
     throw new Error('Type d\'entité non pris en charge');

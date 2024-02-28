@@ -1,6 +1,10 @@
+import { getDate } from '@services/utils.js'
+
+
 async function getTrendSeries(month_include, series_number, max_page) {
     try {
         let trendSeries = [];
+        let uniqueNames = {};
 
         for (let page = 1; page <= max_page; page++) {
             const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
@@ -9,21 +13,21 @@ async function getTrendSeries(month_include, series_number, max_page) {
             }
             const data = await response.json();
 
-            let date = new Date();
-            date.setMonth(date.getMonth() - month_include);
-            let year = date.getFullYear();
-            let month = String(date.getMonth() + 1).padStart(2, '0');
-            let day = String(date.getDate()).padStart(2, '0');
-            let formattedDate = `${year}-${month}-${day}`;
-            const filteredSeries = data.results.filter(serie => serie.first_air_date >= formattedDate);
+            const limitDate = await getDate(month_include);
+            const filteredByDate = data.results.filter(serie => serie.first_air_date >= limitDate);
+            const filteredByVote = filteredByDate.filter(serie => serie.vote_count >= 8)
 
-            trendSeries.push(...filteredSeries);
+            filteredByVote.forEach(serie => {
+                if (!uniqueNames[serie.name]) {
+                    trendSeries.push(serie);
+                    uniqueNames[serie.name] = true; 
+                }
+            });
 
             if (max_page > data.total_pages) {
                 max_page = data.total_pages
             }
         }
-
         trendSeries.sort((a, b) => b.vote_average - a.vote_average);
         trendSeries = trendSeries.slice(0, series_number);
         return trendSeries;
@@ -37,6 +41,7 @@ async function getTrendSeries(month_include, series_number, max_page) {
   async function getLatestSeries(series_number, max_page) {
     try {
         let latestSeries = [];
+        let uniqueNames = {};
 
         for (let page = 1; page <= max_page; page++) {
             const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
@@ -45,7 +50,15 @@ async function getTrendSeries(month_include, series_number, max_page) {
             }
             const data = await response.json();
 
-            latestSeries.push(...data.results);
+            const limitDate = await getDate(0)
+            const filteredSeries = data.results.filter(serie => serie.first_air_date <= limitDate);
+
+            filteredSeries.forEach(serie => {
+                if (!uniqueNames[serie.name]) {
+                    latestSeries.push(serie);
+                    uniqueNames[serie.name] = true; 
+                }
+            });
 
             if (max_page > data.total_pages) {
                 max_page = data.total_pages
@@ -107,5 +120,66 @@ async function sortSeries(series, order) {
 
 
 
+async function getSerie(serieId) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR`);
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails du film:', error);
+    }
+  }
 
-  export { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries } 
+
+
+  async function getSeriesRandomGenre() {
+    try {
+        const genres = await getSeriesGenres();
+        const randomIndex = Math.floor(Math.random() * genres.length);
+        return genres[randomIndex];
+    } catch (error) {
+        console.error('Erreur lors de la sélection d\'un genre aléatoire:', error);
+    }
+  }
+  
+
+
+
+  async function getLatestGenreSeries(genreId, series_number, max_page) {
+    try {
+        let latestSeries = [];
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+
+            const currentDate = await getDate(0);
+            const filteredByDate = data.results.filter(serie => currentDate >= serie.first_air_date)
+
+            const filteredByGenre = filteredByDate.filter(serie => {
+                return serie.genre_ids.includes(genreId.id);
+            });
+
+            latestSeries.push(...filteredByGenre);
+
+            if (max_page > data.total_pages) {
+                max_page = data.total_pages
+            }
+        }
+        latestSeries.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));
+        latestSeries = latestSeries.slice(0, series_number);
+        return latestSeries;
+    }
+    catch (error) {
+        console.error('Erreur lors du fetch de la requête:', error);
+    }
+  }
+
+
+
+  export { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries, getSerie, getLatestGenreSeries, getSeriesRandomGenre } 
