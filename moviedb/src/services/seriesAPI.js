@@ -73,10 +73,39 @@ async function getSeriesGenres() {
     } catch (error) {
         console.error('Erreur lors du fetch des genres:', error);
     }
-  }
+}
+
+
+
+  async function searchSerie(query, max_page){
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr&query=${query}`);
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête');
+        }
+        const data = await response.json();
+        const series = data.results;
+
+        return series; 
+    } catch (error) {
+        console.error('Erreur lors de la recherche de films:', error);
+    }
+}
+
+
+
+async function sortSeries(series, order) {
+    series.sort((a, b) => {
+        if (order === 'ordre croissant') {
+            return a.name.localeCompare(b.title);
+        } else {
+            return b.name.localeCompare(a.title);
+        }
+    });
+    return series;
+}
 
 
 
 
-
-  export { getTrendSeries, getLatestSeries, getSeriesGenres } 
+  export { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries } 

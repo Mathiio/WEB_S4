@@ -69,6 +69,45 @@ async function getLatestMovies(movies_number, max_page) {
 
 
 
+async function searchMovie(query, max_page){
+    try {
+        let searchedMovie = [];
+
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr&query=${query}&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+            const movies = data.results;
+
+            searchedMovie.push(...movies);
+
+            if (max_page > data.total_pages) {
+                max_page = data.total_pages
+            }
+        }
+        return searchedMovie;  
+    } catch (error) {
+        console.error('Erreur lors de la recherche de films:', error);
+    }
+}
+
+
+
+async function sortMovies(movies, order) {
+    movies.sort((a, b) => {
+        if (order === 'ordre croissant') {
+            return a.title.localeCompare(b.title);
+        } else {
+            return b.title.localeCompare(a.title);
+        }
+    });
+    return movies;
+}
+
+
+
  
 async function getMovie(movieId) {
   try {
@@ -148,4 +187,4 @@ async function getMoviesByGenre(genreId, movies_number) {
 
 
 
-export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getMoviesGenres, getRandomGenre, getMoviesByGenre } 
+export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getMoviesGenres, getRandomGenre, getMoviesByGenre, searchMovie, sortMovies } 

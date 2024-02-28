@@ -55,3 +55,6 @@ body{
     justify-content: start;
     align-items: start;
 }
+.splide__track{
+    width: 100%;
+}  

@@ -1,27 +1,3 @@
-import Splide from '@splidejs/splide'
-import '@splidejs/splide/dist/css/splide.min.css'
-
-
-
-function initSlider(splideID) {
-    const splideElement = document.getElementById(splideID)
-
-    new Splide(splideElement, {
-    type   : 'loop',
-    perMove: 1,
-    autoWidth: true,
-    pagination: false,
-    breakpoints: {
-        740: {
-            type   : 'loop',
-            focus : 'center'
-        },
-    }
-    }).mount();
-}
-
-
-
 function getImageUrl(posterPath) {
   return posterPath ? `https://image.tmdb.org/t/p/original${posterPath}` : ''; 
 }
@@ -34,5 +10,14 @@ function formatDate(dateString) {
 
 
 
+async function filterByGenre(medias, selectedGenre) {
+  if (selectedGenre === 'tout') {
+      return medias; 
+  } else {
+      return medias.filter(media => media.genre_ids.includes(selectedGenre)); 
+  }
+}
 
-export{ initSlider, formatDate, getImageUrl }
+
+
+export{ formatDate, getImageUrl, filterByGenre }

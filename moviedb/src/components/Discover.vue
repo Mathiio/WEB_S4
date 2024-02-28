@@ -17,16 +17,32 @@
                 </select>
             </div>
         </div>
-        <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="searchMedias">
+        <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="search">
         <div class="show_medias">
-            <article v-for="media in filteredMedias" :key="media.id"  @click="redirectToMedia(media.id)" class="splide__slide" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
+            <article v-for="media in searchedMedias" class="results" :key="media.id"  @click="redirectToMedia(media.id)" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                 <div class="gradient">
-                    <h3>{{ media.title }}</h3>
+                    <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
                     <span>
-                        <p class="date">{{ formatDate(media.release_date) }}</p>
+                        <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
                         <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
                     </span>
                 </div>
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
             </article>
         </div>
     </section>
@@ -35,6 +51,27 @@
 
 
 <style scoped>
+.skeleton_article{
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(236, 236, 236, 0.6);
+}
+.skeleton_article::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
+    animation: shimmer 1.4s infinite;
+    content: '';
+}
+@keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
 section{
     width:100%;
     display: flex;
@@ -157,7 +194,7 @@ article{
 
 
 <script>
-import { getImageUrl, formatDate } from '@services/utils.js'
+import { getImageUrl, formatDate, filterByGenre } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
 
 
@@ -171,11 +208,37 @@ export default {
             searchQuery: '',
             selectedGenre: 'tout',
             sortOrder: 'ordre croissant',
-            searchedMedias: []
+            searchedMedias: [],
+            show_limit: 16,
+            loading: false,
         };
     },
     created() {
         this.retrieveGenres();
+    },
+    watch: {
+        selectedGenre: {
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        },
+        sortOrder: {
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        },
+        selectedMedia: {
+            immediate: true,
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        }
     },
     methods: {
         redirectToMedia(mediaId) {
@@ -185,50 +248,34 @@ export default {
             const entityAPI = getEntityAPI(this.selectedMedia);
             this.genres = await entityAPI.getGenres();
         },
-        async searchMedias(event) {
-            const query = event.target.value.trim();
+        async search() {
+            const query = this.searchQuery.trim();
+            this.resetResults()
             if (query.length > 0) { 
+                this.loading = true;
+                this.searchedMedias = [];
+                const entityAPI = getEntityAPI(this.selectedMedia);
                 try {
-                    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr&query=${query}`);
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la requête');
-                    }
-                    const data = await response.json();
-                    this.searchedMedias = data.results; 
-                } catch (error) {
-                    console.error('Erreur lors de la recherche de films:', error);
+                    this.searchedMedias = await entityAPI.searchMedia(query, 15);
+                    this.searchedMedias = await filterByGenre(this.searchedMedias, this.selectedGenre);
+                    this.searchedMedias = await entityAPI.sortMedias(this.searchedMedias, this.sortOrder);
+                    this.searchedMedias = this.searchedMedias.slice(0, this.show_limit);
+                } finally {
+                    this.loading = false;
                 }
             } else {
                 this.searchedMedias = []; 
+                this.loading = false; 
             }
         },
-        filterMediasByGenre(medias) {
-            if (this.selectedGenre === 'tout') {
-                return medias; 
-            } else {
-                return medias.filter(media => media.genre_ids.includes(this.selectedGenre)); 
-            }
+        resetResults(){
+            const resultsElements = document.querySelectorAll('.results');
+            resultsElements.forEach(element => {
+                element.remove();
+            });
         },
         getImageUrl,
         formatDate,
-        sortMedias(medias) {
-            const sortedMedias = [...medias]; 
-
-            sortedMedias.sort((a, b) => {
-                if (this.sortOrder === 'ordre croissant') {
-                    return a.title.localeCompare(b.title);
-                } else {
-                    return b.title.localeCompare(a.title);
-                }
-            });
-            return sortedMedias;
-        },
     },
-    computed: {
-        filteredMedias() {
-            const filteredMediasByGenre = this.filterMediasByGenre(this.searchedMedias);
-            return this.sortMedias(filteredMediasByGenre);
-        }
-    }
 }
 </script>

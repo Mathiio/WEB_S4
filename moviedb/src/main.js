@@ -10,6 +10,7 @@ import Calendar from '@components/Calendar.vue'
 import Match from '@components/Match.vue'
 import MediaPrev from '@components/MediaPrev.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import VueSplide from '@splidejs/vue-splide';
 
 
 const routes = [
@@ -31,6 +32,6 @@ const app = createApp(App)
 
 
 app.use(router)
-
+app.use(VueSplide);
 app.mount('#app')
 
