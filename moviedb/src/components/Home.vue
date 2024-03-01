@@ -60,8 +60,8 @@
 }
 .skeleton_news{
   background-color: rgba(236, 236, 236, 0.6);
-  width: 400px;
-  height: 250px;
+  width: var(--max-card);
+  height: var(--min-card);
   border-radius: var(--max-radius);
   margin-right: var(--big-space) !important;
   position: relative;
@@ -70,7 +70,7 @@
 .skeleton_trend{
     background-color: rgba(236, 236, 236, 0.6);
     width: 100%;
-    height: 300px;
+    height: var(--mid-card);
     border-radius: var(--max-radius);
     position: relative;
     overflow: hidden;
@@ -150,11 +150,11 @@ a {
 }
 .accueil_trend {
     width: 100%;
-    height: 300px;
+    height: var(--mid-card);
 } 
 .accueil_news {
-    width: 400px !important;
-    height: 250px;
+    width: var(--max-card) !important;
+    height: var(--min-card);
 }
 
 .gradient {
@@ -204,6 +204,12 @@ a {
     font-size: var(--min-size);
     color: var(--first-color);
 }
+@media only screen and (max-width: 940px) {
+    .accueil_news {
+        width: var(--mid-card) !important;
+        height: var(--big-card);
+    }
+}
 </style>
 
 
@@ -252,7 +258,7 @@ export default {
         this.loadingTrend = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.trendMedias = await entityAPI.getTrend(3, 8, 50);
+            this.trendMedias = await entityAPI.getTrend(3, 8, 40);
         } finally {
             this.loadingTrend = false;
         }
@@ -261,7 +267,7 @@ export default {
         this.loadingLatest = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.latestMedias = await entityAPI.getLatest(10, 50);
+            this.latestMedias = await entityAPI.getLatest(10, 40);
         } finally {
             this.loadingLatest = false;
         }

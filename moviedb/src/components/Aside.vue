@@ -3,22 +3,19 @@
         <h2>MatchYourMedia</h2>
         <ul>
             <li>   
-                <router-link  to="/"><ion-icon name="home"></ion-icon>Accueil</router-link>
+                <router-link  to="/"><ion-icon name="home"></ion-icon><span>Accueil</span></router-link>
             </li>
             <li>
-                <router-link to="/discover"><ion-icon  name="navigate-circle"></ion-icon>Découvrir</router-link>
+                <router-link to="/discover"><ion-icon  name="navigate-circle"></ion-icon><span>Découvrir</span></router-link>
             </li>
             <li>
-                <router-link  to="/news"><ion-icon  name="time"></ion-icon>Nouveautés</router-link>
+                <router-link  to="/news"><ion-icon  name="time"></ion-icon><span>Nouveautés</span></router-link>
             </li>
             <li>
-                <router-link to="/ratted"><ion-icon  name="star"></ion-icon>Mieux notés</router-link>
+                <router-link to="/ratted"><ion-icon  name="star"></ion-icon><span>Mieux notés</span></router-link>
             </li>
             <li>
-                <router-link to="/calendar"><ion-icon name="alarm"></ion-icon>Calendrier</router-link>
-            </li>
-            <li>
-                <router-link to="/match"><ion-icon name="heart-circle"></ion-icon>Match</router-link>
+                <router-link to="/match"><ion-icon name="heart-circle"></ion-icon><span>Match</span></router-link>
             </li>
         </ul>
     </div>
@@ -75,5 +72,36 @@
     a ion-icon{
         margin-right:var(--min-space);
         font-size: var(--mid-size);
+    }
+    @media only screen and (max-width: 940px) {
+        div{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding:var(--big-space);
+            border: solid 1.5px var(--second-color);
+            height:auto;
+            border-radius:var(--mid-radius);
+            background-color: white;
+            margin:0 auto;
+        }
+        h2{
+            display:none;
+        }
+        span{
+            display:none;
+        }
+        ul{
+            flex-direction: row;
+            width:auto;
+            justify-content: center;
+            align-items: center;
+        }
+        a{
+            margin-bottom: 0px;
+            margin-right:var(--min-space);
+            margin-left:var(--min-space);
+        }
     }
 </style>

@@ -36,6 +36,11 @@
     --mid-radius: 20px;
     --min-radius: 10px;
     --max-width: 1300px;
+
+    --max-card: 400px;
+    --big-card: 350px;
+    --mid-card: 300px;
+    --min-card: 250px;
 }
 * {
     margin: 0;
@@ -58,3 +63,27 @@ body{
 .splide__track{
     width: 100%;
 }  
+@media only screen and (max-width: 940px) {
+    :root {
+        --max-size: 2.2rem;
+        --mid-size: 1.3rem;
+        --min-size: 0.9rem;
+        --max-line: 2.2rem;
+        --mid-line: 1.3rem;
+        --min-line: 0.9rem;
+    
+        --max-space: 40px;
+        --big-space: 25px;
+        --mid-space: 14px;
+        --min-space: 10px;
+        --max-radius: 30px;
+        --mid-radius: 16px;
+        --min-radius: 8px;
+        --max-width: 1300px;
+
+        --max-card: 350px;
+        --big-card: 280px;
+        --mid-card: 230px;
+        --min-card: 180px;
+    }
+}

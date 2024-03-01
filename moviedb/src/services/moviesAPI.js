@@ -15,7 +15,7 @@ async function getTrendMovies(month_include, movies_number, max_page) {
 
             const limitDate = await getDate(month_include);
             const filteredByDate = data.results.filter(movie => movie.release_date >= limitDate)
-            const filteredByVote = filteredByDate.filter(movie => movie.vote_count >= 10)
+            const filteredByVote = filteredByDate.filter(movie => movie.vote_count >= 20)
 
             trendMovies.push(...filteredByVote);
 
@@ -189,7 +189,6 @@ async function getLatestGenreMovies(genreId, movies_number, max_page) {
         }
         latestMovies.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
         latestMovies = latestMovies.slice(0, movies_number);
-        console.log(latestMovies)
         return latestMovies;
     }
     catch (error) {

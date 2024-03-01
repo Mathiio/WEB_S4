@@ -93,6 +93,16 @@ h1{
     border-radius:var(--min-radius);
     margin-right:var(--mid-space);
 }
+@media only screen and (max-width: 940px) {
+    img{
+        width:100%;
+        margin-bottom: var(--big-space);
+        margin-right: 0px;
+    }
+    section{
+        flex-direction: column;
+    }
+}
 </style>
 
 

@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <section>
         <h1>Trouve ton match parfait !</h1>
         <form @submit.prevent="submitForm">
@@ -13,16 +13,12 @@
                 <h2>Quel genre te fait vibrer, un peu comme une maraca sous acide ?</h2>
                 <div id="genre_selector">
                     <div class="wrapper">
-                        <div class="splide" id="splide_genre">
-                            <div class="splide__track">
-                                <div class="splide__list">
-                                    <label v-for="genre in genres" :key="genre.id" class="custom_select splide__slide">
-                                        <input type="checkbox" :value="genre.id" v-model="selectedGenres">
-                                        <span>{{ genre.name }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        <Splide :options="{ rewind: true, autoplay: true, }">
+                            <SplideSlide v-for="genre in genres" :key="genre.id" class="custom_select">
+                                <input type="checkbox" :value="genre.id" v-model="selectedGenres">
+                                <span>{{ genre.name }}</span>
+                            </SplideSlide>
+                        </Splide>
                     </div>
                 </div>
             </div>
@@ -344,16 +340,18 @@ form{
 
 
 <script>
-import Splide from '@splidejs/splide'
-import '@splidejs/splide/dist/css/splide.min.css'
-import { getMovieRuntime, getGenres } from '@services/api.js'
-import { initSlider } from '@services/utils.js'
-
+import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
+import '@splidejs/vue-splide/css';
+import { getEntityAPI } from '@services/interface.js'
+import { getImageUrl, formatDate } from '@services/utils.js'
 
 
 
 
 export default {
+    props: {
+        selectedMedia: String 
+    },
     data() {
         return {
             genres: [],
@@ -438,5 +436,8 @@ export default {
     }
 };
 </script>
-   -->
-   <template></template>
+  
+<!-- 
+const entityAPI = getEntityAPI(this.selectedMedia);
+this.trendMedias = await entityAPI.getTrend(3, 8, 40); 
+-->

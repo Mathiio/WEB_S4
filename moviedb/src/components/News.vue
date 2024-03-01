@@ -2,7 +2,6 @@
     <section>
         <div class="head_slider">
             <h1>Surfe sur les tendances</h1>
-            <router-link to="/Ratted">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div :class="{ 'wrapper': loadinglatest, 'none': !loadinglatest }">
             <article class="skeleton_latest">
@@ -29,7 +28,6 @@
     <section>
         <div class="head_slider">
             <h1>Les nouveautés côté {{ this.currentGenre.name }}</h1>
-            <router-link to="/News">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
             <article class="skeleton_latestGenre">
@@ -102,7 +100,7 @@ section {
 .head_slider {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     margin-bottom: var(--mid-space);
 }
@@ -204,6 +202,12 @@ a {
     font-size: var(--min-size);
     color: var(--first-color);
 }
+@media only screen and (max-width: 940px) {
+    .latest {
+        width: var(--mid-card) !important;
+        height: var(--big-card);
+    }
+}
 </style>
 
 
@@ -253,7 +257,7 @@ export default {
         this.loadinglatest = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.latestMedias = await entityAPI.getLatest(12, 50);
+            this.latestMedias = await entityAPI.getLatest(12, 40);
         } finally {
             this.loadinglatest = false;
         }
@@ -263,7 +267,7 @@ export default {
         const entityAPI = getEntityAPI(this.selectedMedia);
         this.currentGenre = await entityAPI.getRandomGenre();
         try {
-            this.latestGenreMedias = await entityAPI.getLatestGenre(this.currentGenre, 10, 50);
+            this.latestGenreMedias = await entityAPI.getLatestGenre(this.currentGenre, 10, 40);
         } finally {
             this.loadinglatestGenre = false;
         }
