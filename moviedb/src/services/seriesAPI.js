@@ -1,7 +1,7 @@
 import { getDate } from '@services/utils.js'
 
 
-async function getTrendSeries(month_include, series_number, max_page) {
+export async function getTrendSeries(month_include, series_number, max_page) {
     try {
         let trendSeries = [];
         let uniqueNames = {};
@@ -38,7 +38,7 @@ async function getTrendSeries(month_include, series_number, max_page) {
 
 
 
-  async function getLatestSeries(series_number, max_page) {
+  export async function getLatestSeries(series_number, max_page) {
     try {
         let latestSeries = [];
         let uniqueNames = {};
@@ -75,7 +75,7 @@ async function getTrendSeries(month_include, series_number, max_page) {
 
   
 
-async function getSeriesGenres() {
+export async function getSeriesGenres() {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_API_KEY}&language=fr`);
         if (!response.ok) {
@@ -90,7 +90,7 @@ async function getSeriesGenres() {
 
 
 
-  async function searchSerie(query, max_page){
+  export async function searchSerie(query, max_page){
     try {
         const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr&query=${query}`);
         if (!response.ok) {
@@ -107,7 +107,7 @@ async function getSeriesGenres() {
 
 
 
-async function sortSeries(series, order) {
+export async function sortSeries(series, order) {
     series.sort((a, b) => {
         if (order === 'ordre croissant') {
             return a.name.localeCompare(b.title);
@@ -120,7 +120,7 @@ async function sortSeries(series, order) {
 
 
 
-async function getSerie(serieId) {
+export async function getSerie(serieId) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR`);
         if (!response.ok) {
@@ -135,7 +135,7 @@ async function getSerie(serieId) {
 
 
 
-  async function getSeriesRandomGenre() {
+  export async function getSeriesRandomGenre() {
     try {
         const genres = await getSeriesGenres();
         const randomIndex = Math.floor(Math.random() * genres.length);
@@ -148,7 +148,7 @@ async function getSerie(serieId) {
 
 
 
-  async function getLatestGenreSeries(genreId, series_number, max_page) {
+  export async function getLatestGenreSeries(genreId, series_number, max_page) {
     try {
         let latestSeries = [];
         for (let page = 1; page <= max_page; page++) {
@@ -180,6 +180,77 @@ async function getSerie(serieId) {
     }
   }
 
+  
+  
+  export async function sortSeriesByTime(series, runtime) {
+    const filteredSeries = [];
+    for (const serie of series) {
+        try {
+            const response = await fetch(`https://api.themoviedb.org/3/tv/${serie.id}?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+            
+            const episodeRuntimes = data.episode_run_time;
+            const averageRuntime = episodeRuntimes.reduce((acc, cur) => acc + cur, 0) / episodeRuntimes.length;
+
+            if (averageRuntime < runtime) {
+                filteredSeries.push(serie);
+            }
+        } catch (error) {
+            console.error('Erreur lors du tri des séries par durée moyenne:', error);
+        }
+    }
+    return filteredSeries;
+}
 
 
-  export { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries, getSerie, getLatestGenreSeries, getSeriesRandomGenre } 
+
+export async function sortSeriesByGenres(selectedGenres, max_page) {
+    try {
+        let genresSeries = [];
+        let uniqueNames = {};
+
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+            const matchGenres = data.results.filter(serie => {
+                return selectedGenres.every(genreId => serie.genre_ids.includes(genreId));
+            });
+
+            genresSeries.push(...matchGenres);
+        }
+        genresSeries = genresSeries.filter(serie => {
+            if (!uniqueNames[serie.name]) {
+                uniqueNames[serie.name] = true;
+                return true;
+            }
+            return false; 
+        });
+        return genresSeries;
+  } catch (error) {
+      console.error('Erreur lors du fetch de la requête:', error);
+  }
+}
+
+
+
+export async function sortSeriesByDate(series, date) {
+    let SeriesDate = [];
+    const limitDate = await getDate(264)
+
+    if (date === 'young') {
+        SeriesDate = series.filter(serie => serie.first_air_date > limitDate);
+    } else if (date === 'old') {
+        SeriesDate = series.filter(serie => serie.first_air_date < limitDate);
+    } else {
+        SeriesDate = series;
+    }
+
+    return SeriesDate;
+}
+

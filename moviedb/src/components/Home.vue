@@ -36,7 +36,7 @@
             </article>
         </div>
         <div :class="{ 'wrapper': !loadingTrend, 'none': loadingLatest }">
-            <Splide :options="{ rewind: true, pagination: false, }">
+            <Splide :options="{ rewind: true, pagination: false }">
                 <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide accueil_news" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
                     <div class="gradient">
                         <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
@@ -156,7 +156,6 @@ a {
     width: var(--max-card) !important;
     height: var(--min-card);
 }
-
 .gradient {
     padding: var(--big-space);
     display: flex;

@@ -2,7 +2,7 @@ import { getDate } from '@services/utils.js'
 
 
 
-async function getTrendMovies(month_include, movies_number, max_page) {
+export async function getTrendMovies(month_include, movies_number, max_page) {
     try {
         let trendMovies = [];
 
@@ -34,7 +34,7 @@ async function getTrendMovies(month_include, movies_number, max_page) {
 
 
 
-async function getLatestMovies(movies_number, max_page) {
+export async function getLatestMovies(movies_number, max_page) {
     try {
         let latestMovies = [];
 
@@ -65,7 +65,7 @@ async function getLatestMovies(movies_number, max_page) {
 
 
 
-async function searchMovie(query, max_page){
+export async function searchMovie(query, max_page){
     try {
         let searchedMovie = [];
 
@@ -91,7 +91,7 @@ async function searchMovie(query, max_page){
 
 
 
-async function sortMovies(movies, order) {
+export async function sortMovies(movies, order) {
     movies.sort((a, b) => {
         if (order === 'ordre croissant') {
             return a.title.localeCompare(b.title);
@@ -104,8 +104,7 @@ async function sortMovies(movies, order) {
 
 
 
- 
-async function getMovie(movieId) {
+export async function getMovie(movieId) {
   try {
       const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR`);
       if (!response.ok) {
@@ -120,7 +119,7 @@ async function getMovie(movieId) {
 
 
 
-async function getMovieRuntime(movieId) {
+export async function getMovieRuntime(movieId) {
   try {
       const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${import.meta.env.VITE_API_KEY}`);
       if (!response.ok) {
@@ -136,7 +135,7 @@ async function getMovieRuntime(movieId) {
 
 
 
-async function getMoviesGenres() {
+export async function getMoviesGenres() {
   try {
       const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_API_KEY}&language=fr`);
       if (!response.ok) {
@@ -151,8 +150,7 @@ async function getMoviesGenres() {
 
 
 
-
-async function getMoviesRandomGenre() {
+export async function getMoviesRandomGenre() {
   try {
       const genres = await getMoviesGenres();
       const randomIndex = Math.floor(Math.random() * genres.length);
@@ -164,7 +162,7 @@ async function getMoviesRandomGenre() {
 
 
 
-async function getLatestGenreMovies(genreId, movies_number, max_page) {
+export async function getLatestGenreMovies(genreId, movies_number, max_page) {
     try {
         let latestMovies = [];
         for (let page = 1; page <= max_page; page++) {
@@ -198,5 +196,64 @@ async function getLatestGenreMovies(genreId, movies_number, max_page) {
 
 
 
+export async function sortMoviesByTime(movies, runtime) {
+    const filteredMovies = [];
+    for (const movie of movies) {
+        try {
+            const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+            const movieRuntime = data.runtime;
 
-export { getTrendMovies, getLatestMovies, getMovie, getMovieRuntime, getMoviesGenres, getMoviesRandomGenre, getLatestGenreMovies, searchMovie, sortMovies } 
+            if (movieRuntime < runtime) {
+                filteredMovies.push(movie);
+            }
+        } catch (error) {
+            console.error('Erreur lors du tri des films par durée moyenne:', error);
+        }
+    }
+    return filteredMovies;
+}
+
+
+
+export async function sortMoviesByGenres(selectedGenres, max_page) {
+    try {
+        let genresMovies = [];
+
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+            const matchGenres = data.results.filter(movie => {
+                return selectedGenres.every(genreId => movie.genre_ids.includes(genreId));
+            });
+
+            genresMovies.push(...matchGenres);
+        }
+        return genresMovies;
+  } catch (error) {
+      console.error('Erreur lors du fetch de la requête:', error);
+  }
+}
+
+
+
+export async function sortMoviesByDate(movies, date) {
+    let MoviesDate = [];
+    const limitDate = await getDate(264)
+
+    if (date === 'young') {
+        MoviesDate = movies.filter(movie => movie.release_date > limitDate);
+    } else if (date === 'old') {
+        MoviesDate = movies.filter(movie => movie.release_date < limitDate);
+    } else {
+        MoviesDate = movies;
+    }
+
+    return MoviesDate;
+}

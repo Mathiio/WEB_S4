@@ -1,11 +1,11 @@
 <template>
     <section>
         <h1>Trouve ton match parfait !</h1>
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="submitForm" v-if="!showfilm">
             <div class="question">
                 <h2>Combien de temps pour cette séance popcorn ?</h2>
                 <div class="range_show">
-                    <input type="range" min="50" max="300" value="50" v-model="sliderValue" class="slider">
+                    <input type="range" min="20" max="300" value="50" v-model="sliderValue" class="slider">
                     <p class="range_value">{{ sliderValue }}min</p>
                 </div>
             </div>
@@ -13,7 +13,7 @@
                 <h2>Quel genre te fait vibrer, un peu comme une maraca sous acide ?</h2>
                 <div id="genre_selector">
                     <div class="wrapper">
-                        <Splide :options="{ rewind: true, autoplay: true, }">
+                        <Splide :options="{ rewind: true, autoplay: true, pagination: false }">
                             <SplideSlide v-for="genre in genres" :key="genre.id" class="custom_select">
                                 <input type="checkbox" :value="genre.id" v-model="selectedGenres">
                                 <span>{{ genre.name }}</span>
@@ -26,7 +26,7 @@
                 <h2>Plutôt vintage ou dernier cri ?</h2>
                 <div class="age_div">
                     <label class="custom_select_2">
-                        <input type="checkbox" value="old"  v-model="filterOptions.old">
+                        <input type="radio" value="old"  v-model="filterOptions">
                         <span>
                             <svg width="74" height="75" viewBox="0 0 74 75" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M72.2273 43.5408L72.8356 36.8587C72.8356 27.9862 71.1266 20.8887 64.8671 16.2221C61.4417 9.37016 53.8079 0.85315 36.9926 0.851929C20.1857 0.851929 12.5556 9.37017 9.13269 16.2234C2.87319 20.8887 1.16417 27.9874 1.16417 36.8599L1.77253 43.5421C0.928403 44.3764 0.351807 45.6713 0.351807 47.5733C0.351807 52.6748 3.33496 53.3601 4.55901 53.426C5.16736 63.5861 15.3787 74.1481 37.0011 74.1481C59.9587 74.1481 68.8239 62.1043 69.4383 53.4273C70.1884 53.3931 71.1913 53.1658 72.0501 52.3559C73.1117 51.3567 73.648 49.7466 73.648 47.5733C73.648 45.6713 73.0714 44.3764 72.2273 43.5408ZM70.798 51.0341C69.9771 51.8062 68.7762 51.5741 68.7726 51.5753L67.6499 51.3066V52.4585C67.6499 60.4454 59.4872 72.3304 37.0011 72.3304C14.5151 72.3304 6.35354 60.4466 6.35354 52.4598L6.34499 51.3298L5.23822 51.5741C5.08603 51.603 4.93134 51.6165 4.77645 51.6144C2.62521 51.6144 2.17322 49.4167 2.17322 47.5733C2.17322 44.7148 3.699 44.115 4.97802 44.115C5.10628 44.115 5.1918 44.1235 5.20646 44.1248L5.43856 44.1541L5.65845 44.0698C8.43515 42.9801 10.2895 41.3175 11.1715 39.1296C12.8769 34.8894 10.5045 29.7624 9.08627 26.6974C8.72589 25.918 8.35208 25.1142 8.25435 24.733C8.52677 22.7064 11.8617 2.66845 37.0011 2.66845C62.1368 2.6709 65.4755 22.7027 65.7466 24.733C65.6477 25.1154 65.2763 25.9192 64.9147 26.6974C63.4965 29.7612 61.1217 34.8894 62.8282 39.1296C63.709 41.3175 65.5634 42.9801 68.3413 44.0698L68.5612 44.1516L68.7884 44.126C68.866 44.1181 68.9439 44.1144 69.0218 44.115C70.3008 44.115 71.8266 44.7148 71.8266 47.5733C71.8266 49.2042 71.4699 50.4026 70.798 51.0341Z"/>
@@ -35,11 +35,11 @@
                                 <path d="M37.067 14.8246C40.5367 14.7159 44.0095 14.7624 47.475 14.9639C50.9493 15.1716 54.415 15.5564 57.9356 16.034C54.6801 14.6011 51.2046 13.6763 47.679 13.1144C44.1511 12.5341 40.5657 12.3631 36.9986 12.4437C33.4386 12.5611 29.8924 12.9462 26.3902 13.5957C22.8915 14.2089 19.4918 15.1508 16.064 16.0328C19.6335 16.1256 23.148 15.6895 26.6345 15.4318C30.1246 15.1618 33.5952 14.8991 37.067 14.8246Z"/>
                                 <path d="M51.0006 32.7748C49.0068 32.7731 47.056 33.3546 45.3886 34.4477C43.7211 35.5408 42.4098 37.0978 41.6162 38.9268C38.3533 38.7521 35.2846 38.9061 32.4957 39.2078C31.7391 37.3084 30.4299 35.6797 28.7374 34.5326C27.045 33.3855 25.0472 32.7728 23.0026 32.7736C17.3613 32.7736 12.7827 37.3351 12.7827 42.9679C12.7827 48.597 17.3613 53.1634 23.0026 53.1634C28.6452 53.1634 33.225 48.5983 33.225 42.9679C33.225 42.8299 33.2079 42.6918 33.203 42.5526C35.5607 42.3119 38.1163 42.1861 40.8124 42.2924C40.7941 42.5159 40.7757 42.7382 40.7757 42.9679C40.7757 48.597 45.3543 53.1634 50.9993 53.1634C56.6395 53.1634 61.2168 48.5983 61.2168 42.9679C61.218 37.3363 56.6407 32.7748 51.0006 32.7748ZM23.0026 49.7637C19.2401 49.7637 16.1898 46.7231 16.1898 42.9679C16.1898 39.2127 19.2401 36.1709 23.0026 36.1709C26.7652 36.1709 29.8167 39.2127 29.8167 42.9679C29.8167 46.7231 26.7652 49.7637 23.0026 49.7637ZM50.9981 49.7637C47.2356 49.7637 44.184 46.7231 44.184 42.9679C44.184 39.2127 47.2356 36.1709 50.9981 36.1709C54.7607 36.1709 57.8122 39.2127 57.8122 42.9679C57.8122 46.7231 54.7607 49.7637 50.9981 49.7637Z"/>
                             </svg>
-                            <p>Films anciens</p>
+                            <p>{{ selectedMedia === 'films' ? "Films anciens" : "Séries anciennes" }}</p>
                         </span>
                     </label>
                     <label class="custom_select_2">
-                        <input type="checkbox" value="young" v-model="filterOptions.young">
+                        <input type="radio" value="young" v-model="filterOptions">
                         <span>
                             <svg width="74" height="75" viewBox="0 0 74 75" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21.7276 38.4162C25.101 38.4162 27.8357 35.6816 27.8357 32.3082C27.8357 28.9348 25.101 26.2002 21.7276 26.2002C18.3543 26.2002 15.6196 28.9348 15.6196 32.3082C15.6196 35.6816 18.3543 38.4162 21.7276 38.4162Z"/>
@@ -48,11 +48,11 @@
                                 <path d="M41.7361 55.631H41.7263V56.6853C41.7263 57.4415 41.1485 58.0571 40.4375 58.0571H33.5587C32.8452 58.0571 32.2674 57.4415 32.2674 56.6853V55.631H32.2577C29.3087 55.631 27.1733 56.182 27.1733 59.5634C27.1733 64.5903 31.8899 68.034 36.9962 68.034C42.105 68.034 46.8216 64.5915 46.8216 59.5634C46.8228 56.182 44.685 55.631 41.7361 55.631ZM41.4429 65.1461C40.0588 65.3758 38.5843 65.5065 36.9975 65.5065C35.4131 65.5065 33.9386 65.3758 32.5545 65.1461C30.4717 64.032 28.9471 62.1116 28.9471 59.5634C28.9471 58.4273 29.0326 57.7554 30.6024 57.516C30.9579 58.8573 32.1489 59.8468 33.5587 59.8468H33.9166C34.895 60.2422 35.9409 60.4438 36.9962 60.4405C38.0523 60.4436 39.099 60.242 40.0784 59.8468H40.4363C41.846 59.8468 43.0346 58.8585 43.3901 57.5184C43.8055 57.5832 44.1842 57.6858 44.4541 57.8519C44.6325 57.9619 45.0478 58.2196 45.0478 59.5622C45.0503 62.1104 43.5257 64.032 41.4429 65.1461Z"/>
                                 <path d="M42.1041 40.9364H31.8927C29.3408 40.9364 31.8927 44.5987 36.999 44.5987C42.1041 44.5963 44.6597 40.9364 42.1041 40.9364Z"/>
                             </svg>
-                            <p>Films récents</p>
+                            <p>{{ selectedMedia === 'films' ? "Films récents" : "Séries récentes" }}</p>
                         </span>
                     </label>
                     <label class="custom_select_2">
-                        <input type="checkbox" value="none" v-model="filterOptions.none">
+                        <input type="radio" value="none" v-model="filterOptions">
                         <span>
                             <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M71.8668 37.2339L72.4766 31.3989C72.4766 23.6626 70.7671 17.4439 64.4791 13.3969C61.0802 7.43108 53.4526 0 36.6379 0C19.8232 0 12.2156 7.43108 8.78667 13.4056C2.52864 17.4439 0.819183 23.6713 0.819183 31.3989L1.42899 37.2252C0.936935 37.6943 0.557765 38.2448 0.313931 38.8441C0.0700973 39.4433 -0.0334438 40.0792 0.00943833 40.714C0.00943833 45.1709 3.00849 45.764 4.21811 45.825C4.65797 52.2095 10.0763 58.7684 21.1428 61.9431C21.4727 62.3531 21.8226 62.7456 22.1425 63.1293C22.2824 63.2863 22.4324 63.4346 22.5823 63.5741C23.2733 66.354 25.0437 68.8403 27.594 70.6124C30.1443 72.3845 33.3179 73.3336 36.5779 73.2991C39.837 73.3303 43.0087 72.38 45.5582 70.6084C48.1077 68.8369 49.879 66.3525 50.5735 63.5741L51.0533 63.1293C51.493 62.7495 51.9069 62.3476 52.2929 61.9257C63.7893 58.498 68.6278 51.4594 69.0776 45.8948C70.0484 45.8705 70.9758 45.5387 71.6868 44.9615C72.7465 44.0894 73.2863 42.6851 73.2863 40.7837C73.3388 40.1389 73.24 39.4915 72.9959 38.8812C72.7518 38.2708 72.3676 37.7103 71.8668 37.2339ZM49.1139 62.7107C49.1139 62.8677 49.1139 63.0159 49.034 63.1642C48.4676 65.6537 46.9172 67.8906 44.6535 69.4846C42.3898 71.0786 39.5565 71.9286 36.6479 71.8861C33.7393 71.9286 30.9059 71.0786 28.6422 69.4846C26.3785 67.8906 24.8282 65.6537 24.2618 63.1642C24.2618 63.0159 24.2018 62.8677 24.1818 62.7281C24.1134 62.2829 24.0799 61.8341 24.0818 61.3849C24.0818 61.2716 24.0818 61.1582 24.0818 61.0448C24.0818 60.9314 24.0818 60.5564 24.1418 60.3121C24.6617 56.8234 27.8107 56.3001 32.1393 56.2564C32.1687 55.9903 32.3091 55.7428 32.534 55.561C32.7589 55.3793 33.0525 55.2761 33.3589 55.2709H39.9968C40.3015 55.2782 40.5927 55.3824 40.8155 55.5639C41.0382 55.7454 41.1773 55.9917 41.2064 56.2564C45.4951 56.2564 48.6441 56.8321 49.2039 60.3121C49.2039 60.5564 49.2239 60.8006 49.2639 61.0448C49.2639 61.1582 49.2639 61.2716 49.2639 61.3849C49.2492 61.8293 49.1991 62.2723 49.1139 62.7107ZM51.4732 60.3121L51.3532 60.4953C51.2133 60.7046 51.0633 60.9052 50.9134 61.0971C50.9134 60.9401 50.9134 60.7831 50.9134 60.6261C50.9134 60.4691 50.9134 60.4168 50.9134 60.3121C50.3336 55.6197 45.915 54.9394 42.656 54.8173C41.9568 54.0154 41.0469 53.3718 40.0031 52.9407C38.9593 52.5097 37.812 52.3037 36.6579 52.3403C35.5121 52.3108 34.3748 52.5201 33.3403 52.9509C32.3058 53.3817 31.404 54.0215 30.7097 54.8173C27.4608 54.9394 23.0322 55.6197 22.4524 60.3121V60.6261V61.1058C22.3024 60.9052 22.1525 60.7046 22.0125 60.4953L21.8925 60.3121C20.9117 58.7018 20.4098 56.9025 20.433 55.079C20.433 51.1716 22.2324 50.404 25.3414 50.404C26.8797 50.4408 28.4147 50.5485 29.94 50.7267C32.2047 50.984 34.4843 51.1296 36.7678 51.1628C39.0514 51.1293 41.3309 50.9837 43.5957 50.7267C45.1042 50.5487 46.6226 50.4409 48.1442 50.404C51.2933 50.404 53.0027 51.1541 53.0027 55.079C53.0092 56.9082 52.4829 58.709 51.4732 60.3121ZM70.4672 43.7405C70.1906 43.9371 69.8695 44.0807 69.525 44.1619C69.1805 44.243 68.8203 44.2599 68.4678 44.2115L67.3482 43.976V44.979C67.3482 49.7761 63.4794 56.1779 53.7325 59.7103C54.4036 58.2126 54.7429 56.6173 54.7322 55.0092C54.7322 50.7093 52.7328 48.9039 48.1642 48.9039C46.576 48.9386 44.991 49.0463 43.4157 49.2266C41.2176 49.4795 39.0047 49.6222 36.7878 49.6539C34.5676 49.6224 32.3514 49.4797 30.1499 49.2266C28.5613 49.0463 26.963 48.9386 25.3614 48.9039C22.2824 48.9039 18.7435 49.6016 18.7435 55.0092C18.7328 56.6173 19.072 58.2126 19.7432 59.7103C9.87632 56.2128 6.00755 49.8109 6.00755 45.0139V44.0283L4.8979 44.2463C4.74477 44.255 4.59117 44.255 4.43804 44.2463C2.28872 44.2463 1.82886 42.3275 1.82886 40.714C1.82886 38.2282 3.35838 37.7049 4.63798 37.7049H4.86791H5.09783L5.31776 37.6264C6.5306 37.2849 7.64766 36.7249 8.59656 35.9827C9.54546 35.2404 10.305 34.3325 10.826 33.3178C12.5355 29.6197 10.1562 25.1453 8.74668 22.4764C8.4252 21.9109 8.14473 21.3283 7.90695 20.732C8.18686 18.9876 11.5158 1.49145 36.6479 1.49145C61.7799 1.49145 65.1189 18.9353 65.3888 20.732C65.1554 21.3284 64.8782 21.9111 64.5591 22.4764C63.1395 25.1453 60.7603 29.6197 62.4697 33.3178C62.9827 34.3464 63.7397 35.2684 64.6909 36.0231C65.6421 36.7778 66.7658 37.348 67.988 37.6962L68.2079 37.766H68.4378H68.6678C69.9474 37.766 71.4769 38.2893 71.4769 40.775C71.5908 41.8551 71.2179 42.9313 70.4372 43.7754L70.4672 43.7405Z"/>
@@ -66,22 +66,63 @@
                     </label>
                 </div>
             </div>
-
-            <button type="submit">Rechercher</button>
+            <button type="submit">{{ loading === true ? 'Chargement en cours' : 'Rechercher' }}<span v-if="loading" class="loader"></span></button>
         </form>
-        <div v-if="filteredMedias.length">
-            <h2>Résultats:</h2>
-            <ul>
-                <li v-for="media in filteredMedias.slice(0, 5)" :key="media.id">{{ media.title }}</li>
+        <div v-if="showfilm" class="search_result" >
+            <h2>Ces films sont faits pour vous !</h2>
+            <ul class="result_list">
+                <li v-for="media in matchMedia.slice(0, 20)" @click="redirectToMedia(media.id)" :key="media.id">{{ selectedMedia === 'films' ? media.title : media.name }}</li>
             </ul>
-        </div>
-        <div v-if="loading">
-            <p>Chargement en cours...</p>
         </div>
     </section>
 </template>
   
+
+
 <style scoped>
+.loader {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #FFF;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin-left: var(--mid-space);
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+.search_result{
+    width:100%;
+}
+.result_list{
+    list-style:none;
+    width:100%;
+}
+.result_list li{
+    border-bottom: solid 1px var(--second-color);
+    padding-top:var(--min-space);
+    padding-bottom:var(--min-space);
+    width:100%;
+    color: var(--second-color);
+    font-family: 'regular';
+    font-size: var(--min-size);
+    cursor:pointer;
+    transition: all ease-in-out 0.15s;
+}
+.result_list li:hover{
+    color: var(--first-color);
+    font-family: 'medium';
+    transition: all ease-in-out 0.15s;
+}
 .age_div{
     width:100%;
     display: flex;
@@ -94,7 +135,6 @@
   font-size: var(--min-size);
   margin-left: var(--mid-space);
 }
-
 .range_show {
   width: 100%;
   position: relative;
@@ -108,7 +148,7 @@
   width: 100%;
   height: 4px;
   border-radius: 5px;
-  background: linear-gradient(to right, red 0%, red calc((var(--slider-value) - 50) * 100% / (300 - 50)), rgba(0,0,0,0.1) calc((var(--slider-value) - 50) * 100% / (300 - 50)), rgba(0,0,0,0.1) 100%);
+  background: linear-gradient(to right, red 0%, red calc((var(--slider-value) - 20) * 100% / (300 - 20)), rgba(0,0,0,0.1) calc((var(--slider-value) - 20) * 100% / (300 - 20)), rgba(0,0,0,0.1) 100%);
   outline: none;
   position: relative;
 }
@@ -145,8 +185,10 @@ button{
     font-family: 'medium';
     font-size:var(--min-size);
     color:white;
+    display: flex;
     text-decoration:none;
     cursor:pointer;
+    align-items: center;
     border:none;
     transition: all ease-in-out .15s;
 }
@@ -194,16 +236,19 @@ form{
     justify-content: start;
     align-items: center;
 }
-
 .custom_select {
     margin-right: var(--mid-space);
+    width: min-content !important;
 }
 .custom_select_2{
     margin-right: var(--mid-space);
+    position:relative;
 }
-.custom_select_2  input[type="checkbox"]{
+.custom_select_2  input[type="radio"]{
     position: absolute;
     opacity: 0;
+    width: 100%;
+    height: -webkit-fill-available;
     padding-top: var(--min-space);
     padding-bottom: var(--min-space);
     padding-right: var(--mid-space);
@@ -212,6 +257,8 @@ form{
 .custom_select input[type="checkbox"] {
     position: absolute;
     opacity: 0;
+    width: 100%;
+    height: -webkit-fill-available;
     padding-top: var(--min-space);
     padding-bottom: var(--min-space);
     padding-right: var(--mid-space);
@@ -220,6 +267,7 @@ form{
 
 .custom_select span {
     cursor: pointer;
+    white-space: nowrap;
     transition: all 0.2s ease-in-out;
     padding-top: var(--min-space);
     padding-bottom: var(--min-space);
@@ -258,48 +306,42 @@ form{
     transition: all 0.2s ease-in-out;
     margin-bottom:var(--mid-space);
 }
-
 .custom_select input[type="checkbox"]:checked+span {
     border: solid 1px var(--first-color);
     color: var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-
 .custom_select input[type="checkbox"]:hover+span {
     border: solid 1px var(--first-color);
     color: var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-
-.custom_select_2 input[type="checkbox"]:checked+span {
+.custom_select_2 input[type="radio"]:checked+span {
     border: solid 1px var(--first-color);
     color: var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-.custom_select_2 input[type="checkbox"]:hover+span {
+.custom_select_2 input[type="radio"]:hover+span {
     border: solid 1px var(--first-color);
     color: var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-.custom_select_2 input[type="checkbox"]:checked+span svg {
+.custom_select_2 input[type="radio"]:checked+span svg {
     fill:var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-.custom_select_2 input[type="checkbox"]:hover+span svg {
+.custom_select_2 input[type="radio"]:hover+span svg {
     fill:var(--first-color);
     transition: all 0.2s ease-in-out;
 }
-
 #genre {
     height: 44px;
     border: none;
     overflow: hidden;
 }
-
 #genre::-moz-focus-inner {
     border: 0;
 }
-
 #genre:focus {
     outline: none;
 }
@@ -335,6 +377,24 @@ form{
 .splide__track{
     width:100%;
 }
+@media only screen and (max-width: 940px) {
+    h2{
+        font-family:'medium';
+    }
+    .age_div {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        grid-column-gap: var(--mid-space);
+        grid-row-gap: var(--big-space);
+    }
+    .custom_select_2 {
+        margin-right: 0px;
+    }
+    .custom_select_2 span svg {
+        width: 60px;
+        margin-bottom: var(--min-space);
+    }
+}
 </style>
 
 
@@ -343,7 +403,6 @@ form{
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
 import { getEntityAPI } from '@services/interface.js'
-import { getImageUrl, formatDate } from '@services/utils.js'
 
 
 
@@ -356,14 +415,15 @@ export default {
         return {
             genres: [],
             selectedGenres: [],
-            searchedMedias: [],
-            sliderValue: '50',
+            matchMedia: [],
+            sliderValue: '20',
             filterOptions: {
                 old: false,
                 young: false,
                 none: false
             },
             loading: false,
+            showfilm: false,
         };
     },
     created() {
@@ -378,66 +438,34 @@ export default {
         }
     },
     methods: {
-        async retrieveGenres() {
-            this.genres =  await getGenres()
-            setTimeout(() => {
-                this.initSlider('splide_genre');
-            }, 10);
+        redirectToMedia(mediaId) {
+            this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
         },
-        getMovieRuntime,
-        initSlider,
-        async filterByRuntime(medias) {
-            const filteredMedias = [];
-            for (const media of medias) {
-                try {
-                const runtime = await this.getMovieRuntime(media.id);
-                if (runtime !== null && runtime < this.sliderValue) {
-                    filteredMedias.push(media);
-                }
-                } catch (error) {
-                console.error('Erreur lors de la récupération du runtime du film:', error);
-                }
-            }
-            return filteredMedias;
+        async retrieveGenres() {
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            this.genres =  await entityAPI.getGenres()
         },
         async submitForm() {
             try {
                 this.loading = true;
-                const selectedGenres = this.selectedGenres.join(',');
-                let url = `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&with_genres=${selectedGenres}`;
 
-                if (this.filterOptions.old) {
-                    url += `&primary_release_date.lte=2005-01-01`;
-                } else if (this.filterOptions.young) {
-                    url += `&primary_release_date.gte=2005-01-01`;
-                }
+                const entityAPI = getEntityAPI(this.selectedMedia);
+                this.matchMedia = await entityAPI.sortMediasByGenres(this.selectedGenres, 60)
+                this.matchMedia = await entityAPI.sortMediasByDate(this.matchMedia, this.filterOptions)
+                this.matchMedia = await entityAPI.sortMediasByTime(this.matchMedia, this.sliderValue)
 
-                console.log(url);
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
+                if (this.matchMedia.length === 0) {
+                    this.matchMedia.push({ title: "Aucun média trouvé", name: "aucun média n'a été trouvé avec tes critères de recherche" });
                 }
-                const data = await response.json();
-                const sortedResults = data.results.sort((a, b) => b.vote_average - a.vote_average);
-                this.sortedMedias = sortedResults;
-                const filteredByRuntime = this.filterByRuntime(this.sortedMedias);
-                this.searchedMedias = await filteredByRuntime;
-                console.log(this.searchedMedias);
+                else{
+                    this.matchMedia = this.matchMedia.sort((a, b) => b.vote_average - a.vote_average);
+                }
                 this.loading = false;
+                this.showfilm = true;
             } catch (error) {
                 console.error('Erreur lors de la recherche de films:', error);
             }
         },
     },
-    computed: {
-        filteredMedias() {
-            return this.searchedMedias;
-        }
-    }
 };
 </script>
-  
-<!-- 
-const entityAPI = getEntityAPI(this.selectedMedia);
-this.trendMedias = await entityAPI.getTrend(3, 8, 40); 
--->

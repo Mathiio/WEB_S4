@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="head_slider">
-            <h1>Surfe sur les tendances</h1>
+            <h1>Surfe sur les dernière arrivées</h1>
         </div>
         <div :class="{ 'wrapper': loadinglatest, 'none': !loadinglatest }">
             <article class="skeleton_latest">
