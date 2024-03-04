@@ -1,0 +1,299 @@
+<template>
+    <section>
+        <h1>{{ selectedMedia === 'films' ? 'Une idée de film en tête ?' : 'Une idée de série en tête ?' }}</h1>
+        <div class="selectors">
+            <div class="select_box">
+                <label for="genre">Genre</label>
+                <select name="genre" id="genre" v-model="selectedGenre">
+                    <option value="tout">Tout</option>
+                    <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
+                </select>
+            </div>
+            <div class="select_box">      
+                <label for="sortOrder">Trier par</label>
+                <select name="sortOrder" id="sortOrder" v-model="sortOrder">
+                    <option value="ordre croissant">Ordre croissant</option>
+                    <option value="ordre décroissant">Ordre décroissant</option>
+                </select>
+            </div>
+        </div>
+        <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="search">
+        <div class="show_medias">
+            <article v-for="media in searchedMedias" class="results" :key="media.id"  @click="redirectToMedia(media.id)" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
+                <div class="gradient">
+                    <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
+                    <span>
+                        <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                        <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
+                    </span>
+                </div>
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+            <article v-if="loading" class="skeleton_article">
+            </article>
+        </div>
+    </section>
+</template>
+
+
+
+<style scoped>
+.skeleton_article{
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(236, 236, 236, 0.6);
+}
+.skeleton_article::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
+    animation: shimmer 1.4s infinite;
+    content: '';
+}
+@keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+section{
+    width:100%;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    padding:var(--max-space);
+}
+.show_medias{
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-column-gap: var(--mid-space);
+    grid-row-gap: var(--big-space);
+}
+h1{
+    width:100%;
+    text-align: left;
+    font-family:'bold';
+    font-size:var(--max-size);
+    color:var(--second-color-alt);
+    margin-bottom:var(--big-space);
+}
+input{
+    width:100%;
+    border: solid 1.5px var(--second-color-alt);
+    border-radius:var(--min-radius);
+    font-family: 'regular';
+    font-size:var(--min-size);
+    padding: var(--mid-space);
+    color:var(--second-color-alt);
+    margin-bottom:var(--big-space);
+}
+input:focus{
+    outline: none;
+}
+.select_box{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+}
+.select_box label{
+    font-family: 'regular';
+    color:var(--second-color);
+    font-size:var(--min-size);
+    margin-bottom: var(--min-space);
+}
+.selectors{
+    width:100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-bottom:var(--mid-space);
+}
+select{
+    padding: var(--min-space);
+    border-radius: var(--min-space);
+    border: solid 1.5px var(--second-color-alt);
+    color: var(--second-color-alt);
+    font-family: 'regular';
+    font-size: var(--min-size);
+    margin-right:var(--mid-size);
+}
+select:focus{
+    outline: none;
+}
+article{
+    display: flex;
+    border-radius:var(--max-radius);
+    position: relative;
+    height:250px;
+    overflow: hidden;
+    cursor:pointer;
+}
+.gradient{
+    padding:var(--big-space);
+    display: flex;
+    justify-content: start;
+    align-items: end;
+    align-content: end;
+    flex-wrap:wrap;
+    width:100%;
+    height:100%;
+    background: rgb(0,0,0);
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.6) 100%);
+}
+.gradient h3{
+    font-family:'medium';
+    font-size:var(--min-size);
+    color:white;
+    margin-bottom:var(--min-space);
+}
+.gradient span{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width:100%;
+}
+.gradient span p:first-child{
+    font-family:'medium';
+    font-size:var(--min-size);
+    color:white;
+    padding-right:var(--min-space);
+    border-right: solid 1px white;
+    margin-right:var(--min-space);
+}
+.gradient span p{
+    font-family:'medium';
+    font-size:var(--min-size);
+    color:var(--first-color);
+}
+.gradient span p{
+    font-family:'medium';
+    font-size:var(--min-size);
+    color:var(--first-color);
+}
+
+
+@media only screen and (max-width: 1100px) {
+    .show_medias{
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+@media only screen and (max-width: 540px) {
+    .show_medias{
+        grid-template-columns: repeat(1,1fr);
+    }
+    section {
+        padding-top: var(--max-space);
+        padding-bottom: var(--max-space);
+        padding-right: var(--mid-space);
+        padding-left: var(--mid-space);
+    }
+}
+</style>
+
+
+
+
+<script>
+import { getImageUrl, formatDate, filterByGenre } from '@services/utils.js'
+import { getEntityAPI } from '@services/interface.js';
+
+
+export default {
+    props: {
+        selectedMedia: String 
+    },
+    data() {
+        return {
+            genres: [],
+            searchQuery: '',
+            selectedGenre: 'tout',
+            sortOrder: 'ordre croissant',
+            searchedMedias: [],
+            show_limit: 16,
+            loading: false,
+        };
+    },
+    created() {
+        this.retrieveGenres();
+    },
+    watch: {
+        selectedGenre: {
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        },
+        sortOrder: {
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        },
+        selectedMedia: {
+            immediate: true,
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.search();
+                }
+            }
+        }
+    },
+    methods: {
+        redirectToMedia(mediaId) {
+            this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
+        },
+        async retrieveGenres() {
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            this.genres = await entityAPI.getGenres();
+        },
+        async search() {
+            const query = this.searchQuery.trim();
+            this.resetResults()
+            if (query.length > 0) { 
+                this.loading = true;
+                this.searchedMedias = [];
+                const entityAPI = getEntityAPI(this.selectedMedia);
+                try {
+                    this.searchedMedias = await entityAPI.searchMedia(query, 15);
+                    this.searchedMedias = await filterByGenre(this.searchedMedias, this.selectedGenre);
+                    this.searchedMedias = await entityAPI.sortMedias(this.searchedMedias, this.sortOrder);
+                    this.searchedMedias = this.searchedMedias.slice(0, this.show_limit);
+                } finally {
+                    this.loading = false;
+                }
+            } else {
+                this.searchedMedias = []; 
+                this.loading = false; 
+            }
+        },
+        resetResults(){
+            const resultsElements = document.querySelectorAll('.results');
+            resultsElements.forEach(element => {
+                element.remove();
+            });
+        },
+        getImageUrl,
+        formatDate,
+    },
+}
+</script>
