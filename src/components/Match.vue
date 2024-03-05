@@ -365,9 +365,6 @@ form{
     width:100%;
 }
 @media only screen and (max-width: 940px) {
-    h2{
-        font-family:'medium';
-    }
     .age_div {
         display: grid;
         grid-template-columns: repeat(3,1fr);

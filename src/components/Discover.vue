@@ -93,7 +93,6 @@ section{
 h1{
     width:100%;
     text-align: left;
-    font-family:'medium';
     font-size: var(--mid-size);
     color:var(--third-color);
 }

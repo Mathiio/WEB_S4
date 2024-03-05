@@ -198,8 +198,8 @@ export default {
       latestGenre2: [],
       loadinglatest: true,
       loadinglatestGenre: true,
-      Genre1: '',
-      Genre2: '',
+      genre1: '',
+      genre2: '',
     };
   },
   created() {
