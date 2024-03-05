@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>MatchYourMedia</h2>
+        <router-link class="logo" to="/">MédiaMatch</router-link>
         <ul>
             <li>   
                 <router-link  to="/"><ion-icon name="home"></ion-icon><span>Accueil</span></router-link>
@@ -28,15 +28,15 @@
         justify-content: start;
         align-items: start;
         padding:var(--max-space);
-        border-right: solid 1.5px var(--second-color);
+        background-color:var(--second-color-alt);
         height:100vh;
         position:sticky;
     }
-    h2{
-        font-family: 'bold';
+    .logo{
         font-size:var(--mid-size);
         margin-bottom:var(--max-space);
-        color:var(--second-color-alt);
+        color:var(--third-color) !important;
+        font-family:'medium';
     }
     ul{
         list-style-type: none;
@@ -49,19 +49,18 @@
         display: flex;
         justify-content: start;
         align-items: center;
-        color:var(--second-color);
     }
     .router-link-active{
         color:var(--first-color);
     }
     a{
-        color:var(--second-color);
+        color:var(--third-color-alt);
         text-decoration: none;
         margin-bottom:var(--big-space);
         display: flex;
         justify-content: start;
         align-items: center;
-        font-family: 'medium';
+        font-family:'medium';
         font-size: var(--min-size);
         transition: all ease-in-out .15s;
     }
@@ -73,20 +72,17 @@
         margin-right:var(--min-space);
         font-size: var(--mid-size);
     }
-    @media only screen and (max-width: 940px) {
+    @media only screen and (max-width: 760px) {
         div{
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
             padding:var(--big-space);
-            border: solid 1.5px var(--second-color);
             height:auto;
-            border-radius:var(--mid-radius);
-            background-color: white;
-            margin:0 auto;
+            width:100%;
         }
-        h2{
+        .logo{
             display:none;
         }
         span{
@@ -97,6 +93,7 @@
             width:auto;
             justify-content: center;
             align-items: center;
+            width:100%;
         }
         a{
             margin-bottom: 0px;

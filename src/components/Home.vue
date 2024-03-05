@@ -9,15 +9,19 @@
             </article>
         </div>
         <div :class="{ 'wrapper': !loadingTrend, 'none': loadingTrend }">
-            <Splide :options="{ rewind: true, autoplay: true, }">
-                <SplideSlide v-for="media in trendMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide accueil_trend" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
-                        <div class="gradient">
-                            <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
-                            <span>
-                                <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                                <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
-                            </span>
-                        </div>
+            <Splide :options="{ rewind: true, autoplay: true, pagination: false  }">
+                <SplideSlide v-for="media in trendMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
+                    <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
+                    <div class="card_infos">
+                        <h3 class="one-line">
+                            <div class="bg_oneline"></div>
+                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                        </h3>
+                        <span>
+                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
+                        </span>
+                    </div>
                 </SplideSlide>
             </Splide>
         </div>
@@ -37,12 +41,16 @@
         </div>
         <div :class="{ 'wrapper': !loadingTrend, 'none': loadingLatest }">
             <Splide :options="{ rewind: true, pagination: false }">
-                <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide accueil_news" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
-                    <div class="gradient">
-                        <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
+                <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide min_card" >
+                    <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
+                    <div class="card_infos">
+                        <h3 class="one-line">
+                            <div class="bg_oneline"></div>
+                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                        </h3>
                         <span>
-                            <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                            <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
+                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
                         </span>
                     </div>
                 </SplideSlide>
@@ -108,9 +116,8 @@ section {
 }
 
 h1 {
-    font-family: 'medium';
     font-size: var(--mid-size);
-    color: var(--second-color-alt);
+    color: var(--third-color);
 }
 
 a {
@@ -121,7 +128,6 @@ a {
     justify-content: start;
     align-items: center;
     font-size: var(--min-size);
-    font-family: 'medium';
 }
 
 .wrapper {
@@ -148,73 +154,12 @@ a {
     overflow: hidden;
     margin-right: var(--big-space) !important;
 }
-.accueil_trend {
-    width: 100%;
-    height: var(--mid-card);
-} 
-.accueil_news {
-    width: var(--max-card) !important;
-    height: var(--min-card);
-}
-.gradient {
-    padding: var(--big-space);
-    display: flex;
-    justify-content: start;
-    align-items: end;
-    align-content: end;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100%;
-    background: rgb(0, 0, 0);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.6) 100%);
-}
-
-.gradient h3 {
-    font-family: 'medium';
-    font-size: var(--mid-size);
-    color: white;
-    margin-bottom: var(--min-space);
-}
-
-.gradient span {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-}
-
-.gradient span p:first-child {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: white;
-    padding-right: var(--min-space);
-    border-right: solid 1px white;
-    margin-right: var(--min-space);
-}
-
-.gradient span p {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: var(--first-color);
-}
-
-.gradient span p {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: var(--first-color);
-}
-@media only screen and (max-width: 940px) {
-    .accueil_news {
-        width: var(--mid-card) !important;
-        height: var(--big-card);
-    }
-}
 @media only screen and (max-width: 540px) {
     section {
         padding-top: var(--max-space);
         padding-bottom: var(--max-space);
-        padding-right: var(--mid-space);
-        padding-left: var(--mid-space);
+        padding-right: var(--big-space);
+        padding-left: var(--big-space);
     }
 }
 </style>
@@ -224,7 +169,7 @@ a {
 
 
 <script>
-import { getImageUrl, formatDate } from '@services/utils.js'
+import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
@@ -265,7 +210,7 @@ export default {
         this.loadingTrend = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.trendMedias = await entityAPI.getTrend(3, 8, 40);
+            this.trendMedias = await entityAPI.getTrend(14);
         } finally {
             this.loadingTrend = false;
         }
@@ -274,13 +219,14 @@ export default {
         this.loadingLatest = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.latestMedias = await entityAPI.getLatest(10, 40);
+            this.latestMedias = await entityAPI.getLatest(20);
         } finally {
             this.loadingLatest = false;
         }
     },
     getImageUrl,
     formatDate,
+    formatVote,
     Splide,
     SplideTrack,
     SplideSlide,

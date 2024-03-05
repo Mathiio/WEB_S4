@@ -1,34 +1,31 @@
 import { getDate } from '@services/utils.js'
 
 
-export async function getTrendSeries(month_include, series_number, max_page) {
+
+export async function getTrendSeries(series_number) {
     try {
         let trendSeries = [];
         let uniqueNames = {};
+        let max_page = 1; 
+        const today = await getDate(0);
 
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
             const data = await response.json();
-
-            const limitDate = await getDate(month_include);
-            const filteredByDate = data.results.filter(serie => serie.first_air_date >= limitDate);
-            const filteredByVote = filteredByDate.filter(serie => serie.vote_count >= 8)
-
-            filteredByVote.forEach(serie => {
-                if (!uniqueNames[serie.name]) {
+            
+            data.results.forEach((serie) => {
+                if (!uniqueNames[serie.name] && serie.first_air_date <= today) {
                     trendSeries.push(serie);
-                    uniqueNames[serie.name] = true; 
+                    uniqueNames[serie.name] = true;
                 }
             });
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            if (trendSeries.length < series_number) {
+                max_page++; 
             }
         }
-        trendSeries.sort((a, b) => b.vote_average - a.vote_average);
         trendSeries = trendSeries.slice(0, series_number);
         return trendSeries;
     } catch (error) {
@@ -38,38 +35,35 @@ export async function getTrendSeries(month_include, series_number, max_page) {
 
 
 
-  export async function getLatestSeries(series_number, max_page) {
+export async function getLatestSeries(series_number) {
     try {
         let latestSeries = [];
         let uniqueNames = {};
+        let max_page=1;
+        const today = await getDate(0);
 
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
-                throw new Error('Erreur lors de la requête');
+                throw new Error("Erreur lors de la requête");
             }
             const data = await response.json();
 
-            const limitDate = await getDate(0)
-            const filteredSeries = data.results.filter(serie => serie.first_air_date <= limitDate);
-
-            filteredSeries.forEach(serie => {
-                if (!uniqueNames[serie.name]) {
+            data.results.forEach((serie) => {
+                if (!uniqueNames[serie.name] && serie.vote_count > 10 && serie.first_air_date <= today) {
                     latestSeries.push(serie);
-                    uniqueNames[serie.name] = true; 
+                    uniqueNames[serie.name] = true;
                 }
             });
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            if (latestSeries.length < series_number) {
+                max_page++; 
             }
         }
-        latestSeries.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date))
+        latestSeries.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));
         latestSeries = latestSeries.slice(0, series_number);
         return latestSeries;
-    }
-    catch (error) {
-        console.error('Erreur lors du fetch de la requête:', error);
+    } catch (error) {
+        console.error("Erreur lors du fetch de la requête:", error);
     }
 }
 
@@ -145,7 +139,6 @@ export async function getSerie(serieId) {
     }
   }
   
-
 
 
   export async function getLatestGenreSeries(genreId, series_number, max_page) {

@@ -1,16 +1,16 @@
-function getImageUrl(posterPath) {
+export function getImageUrl(posterPath) {
   return posterPath ? `https://image.tmdb.org/t/p/original${posterPath}` : ''; 
 }
 
 
 
-function formatDate(dateString) {
+export function formatDate(dateString) {
   return dateString ? new Date(dateString).toLocaleDateString('fr-FR') : '';
 }
 
 
 
-async function filterByGenre(medias, selectedGenre) {
+export async function filterByGenre(medias, selectedGenre) {
   if (selectedGenre === 'tout') {
       return medias; 
   } else {
@@ -20,7 +20,13 @@ async function filterByGenre(medias, selectedGenre) {
 
 
 
-async function getDate(include_month) {
+export function formatVote(vote){
+  return Math.round(vote * 10) / 10;
+}
+
+
+
+export async function getDate(include_month) {
   let date = new Date();
   date.setMonth(date.getMonth() - include_month);
   let year = date.getFullYear();
@@ -28,7 +34,3 @@ async function getDate(include_month) {
   let day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-
-
-
-export{ formatDate, getImageUrl, filterByGenre, getDate }

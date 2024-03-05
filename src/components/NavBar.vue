@@ -1,10 +1,11 @@
 <template>
     <nav>
+        <router-link class="logo" to="/">MédiaMatch</router-link>
         <div>
             <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')">Films</button>
             <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')">Séries</button>
         </div>
-        <router-link  to="/match">{{ selectedMedia === 'films' ? 'Match ton film' : 'Match ta série' }}</router-link>
+        <router-link class="match" to="/match">Chercher un match</router-link>
     </nav>
 </template>
 
@@ -15,21 +16,28 @@ div{
     justify-content: start;
     align-items: center;
 }
+.logo{
+    font-size:var(--mid-size);
+    color:var(--third-color);
+    font-family:'medium';
+    text-decoration:none;
+    display:none;
+}
 div button{
-    color: var(--second-color);
-    font-family: 'medium';
+    color: var(--third-color-alt);
     font-size: var(--min-size);
     margin-right:var(--mid-space);
     transition: all ease-in-out .15s;
     background-color: transparent;
     border:none;
     cursor: pointer;
+    font-family:'medium';
 }
 div button.active_media{
-    color: var(--second-color-alt);
+    color: var(--first-color);
 }
 div button:hover{
-    color: var(--second-color-alt);
+    color: var(--first-color);
     transition: all ease-in-out .15s;
 }
 nav{
@@ -37,34 +45,36 @@ nav{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: var(--big-space);
-    padding-bottom: var(--big-space);
-    padding-right: var(--max-space);
-    padding-left: var(--max-space);
-    border-bottom: solid 1.5px var(--second-color);
+    padding: var(--max-space);
 }
-
-a{
+.match{
     background-color: var(--first-color);
-    padding-top: var(--min-space);
-    padding-bottom: var(--min-space);
-    padding-right: var(--mid-space);
-    padding-left: var(--mid-space);
-    border-radius:var(--min-radius);
-    font-family: 'medium';
+    padding: var(--mid-space);
+    border-radius:var(--radius);
     font-size:var(--min-size);
-    color:white;
+    color:var(--second-color);
     text-decoration:none;
+    font-family: 'medium';
     transition: all ease-in-out .15s;
 }
-a:hover{
+.match:hover{
     background-color: var(--first-color-alt);
     transition: all ease-in-out .15s;
 }
 
-@media only screen and (max-width: 540px) {
-    nav {
-        padding: var(--mid-space);
+@media only screen and (max-width: 760px) {
+    .logo{
+        display:block;
+    }
+    .match{
+        display:none;
+    }
+    nav{
+        padding: var(--big-space);
+    }
+    div button{
+        margin-right:0px;
+        margin-left:var(--mid-space);
     }
 }
 </style>

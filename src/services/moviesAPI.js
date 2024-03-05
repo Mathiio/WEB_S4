@@ -2,29 +2,30 @@ import { getDate } from '@services/utils.js'
 
 
 
-export async function getTrendMovies(month_include, movies_number, max_page) {
+export async function getTrendMovies(movies_number) {
     try {
         let trendMovies = [];
+        let uniqueNames = {};
+        let max_page = 1; 
+        const today = await getDate(0);
 
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
             const data = await response.json();
-
-            const limitDate = await getDate(month_include);
-            const filteredByDate = data.results.filter(movie => movie.release_date >= limitDate)
-            const filteredByVote = filteredByDate.filter(movie => movie.vote_count >= 20)
-
-            trendMovies.push(...filteredByVote);
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            
+            data.results.forEach((movie) => {
+                if (!uniqueNames[movie.title] && movie.release_date <= today) {
+                    trendMovies.push(movie);
+                    uniqueNames[movie.title] = true;
+                }
+            });
+            if (trendMovies.length < movies_number) {
+                max_page++; 
             }
         }
-
-        trendMovies.sort((a, b) => b.vote_average - a.vote_average);
         trendMovies = trendMovies.slice(0, movies_number);
         return trendMovies;
   } catch (error) {
@@ -34,24 +35,28 @@ export async function getTrendMovies(month_include, movies_number, max_page) {
 
 
 
-export async function getLatestMovies(movies_number, max_page) {
+export async function getLatestMovies(movies_number) {
     try {
         let latestMovies = [];
+        let uniqueNames = {};
+        let max_page=1;
+        const today = await getDate(0);
 
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
             const data = await response.json();
 
-            const limitDate = await getDate(0)
-            const filteredMovies = data.results.filter(movie => movie.release_date <= limitDate);
-
-            latestMovies.push(...filteredMovies);
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            data.results.forEach((movie) => {
+                if (!uniqueNames[movie.title] && movie.vote_count > 10 && movie.release_date <= today) {
+                    latestMovies.push(movie);
+                    uniqueNames[movie.title] = true;
+                }
+            });
+            if (latestMovies.length < movies_number) {
+                max_page++; 
             }
         }
         latestMovies.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));

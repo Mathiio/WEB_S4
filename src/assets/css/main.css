@@ -1,46 +1,42 @@
 @font-face {
-    font-family: 'bold';
-    src: url("/fonts/Inter-Bold.woff2") format("woff2");
-}
-@font-face {
-    font-family: 'light';
-    src: url("/fonts/Inter-Light.woff2") format("woff2");
-}
-@font-face {
-    font-family: 'regular';
-    src: url("/fonts/Inter-Regular.woff2") format("woff2");
+    font-family: 'outfit';
+    src: url("/fonts/Outfit.woff2") format("woff2");
 }
 @font-face {
     font-family: 'medium';
-    src: url("/fonts/Inter-Medium.woff2") format("woff2");
+    src: url("/fonts/Outfit-Medium.woff2") format("woff2");
+}
+@font-face {
+    font-family: 'light';
+    src: url("/fonts/Outfit-Light.woff2") format("woff2");
 }
 :root {
-    --first-color: hsl(359, 100%, 50%);
-    --first-color-alt: hsl(359, 100%, 46%);
-    --second-color: hsl(0, 0%, 75%);
-    --second-color-alt: hsl(0, 0%, 20%);
-    --third-color: hsl(0, 0%, 95%);
+    --first-color: hwb(39 24% 0%);
+    --first-color-alt: hsl(39, 100%, 54%);
+    --second-color: rgb(28, 28, 38);
+    --second-color-alt: hsl(240, 8%, 19%);
+    --third-color: hsl(0, 0%, 80%);
+    --third-color-alt: hsl(0, 0%, 65%);
 
     --max-size: 2.5rem;
     --mid-size: 1.4rem;
     --min-size: 1rem;
+    --tin-size: 0.9rem;
     --max-line: 2.5rem;
     --mid-line: 1.4rem;
     --min-line: 1rem;
 
-    --max-space: 50px;
-    --big-space: 30px;
-    --mid-space: 16px;
-    --min-space: 10px;
-    --max-radius: 35px;
-    --mid-radius: 20px;
-    --min-radius: 10px;
-    --max-width: 1300px;
+    --max-space: 48px;
+    --big-space: 24px;
+    --mid-space: 12px;
+    --min-space: 6px;
+    
+    --radius: 12px;
 
-    --max-card: 400px;
-    --big-card: 350px;
-    --mid-card: 300px;
-    --min-card: 250px;
+    --min-card-height:200px;
+    --min-card-width:138px;
+    --mid-card-height:150px;
+    --mid-card-width:300px;
 }
 * {
     margin: 0;
@@ -53,6 +49,8 @@ body{
     justify-content: space-between;
     align-items: start;
     flex-wrap: wrap;
+    font-family:'outfit';
+    background-color: var(--second-color);
 }
 #app{
     width:100%;
@@ -76,17 +74,132 @@ body{
         --big-space: 25px;
         --mid-space: 14px;
         --min-space: 10px;
-        --max-radius: 30px;
-        --mid-radius: 16px;
-        --min-radius: 8px;
-        --max-width: 1300px;
 
         --max-card: 350px;
         --big-card: 280px;
         --mid-card: 230px;
         --min-card: 180px;
+        --tin-card: 180px;
     }
 }
+
+
+
+
+.min_card{
+    width: var(--min-card-width) !important;
+}
+.mid_card{
+    width: var(--mid-card-width) !important;
+}
+.min_card, .mid_card{
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: start;
+    transition: all ease-in-out .15s;
+}
+.min_card:hover, .mid_card:hover{
+    transform: scale(0.98);
+    transition: all ease-in-out .15s;
+}
+.img_banner{
+    width:100%;
+    height: var(--mid-card-height);
+    border-radius: var(--radius);
+}
+.img_poster{
+    width:100%;
+    height: var(--min-card-height);
+    border-radius: var(--radius);
+}
+.card_infos {
+    margin-top: var(--mid-space);
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    align-content: start;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.card_infos h3 {
+    font-family: 'medium';
+    font-size: var(--min-size);
+    color: var(--third-color-alt);
+    margin-bottom: var(--min-space);
+}
+.card_infos span {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+}
+.card_date{
+    font-family:'light';
+    font-weight:100;
+    font-size: var(--tin-size);
+    color: var(--third-color-alt);
+    padding-right: var(--min-space);
+    border-right: solid 1px var(--third-color-alt);
+    margin-right: var(--min-space);
+}
+.card_vote{
+    font-family:'light';
+    font-size: var(--tin-size);
+    color: var(--first-color);
+    display: flex;
+    align-items: center;
+}
+.one-line {
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    position:relative;
+  }
+  .one-line:not(:hover) {
+    text-overflow: ellipsis;
+  }
+  .bg_oneline{
+    position:absolute;
+    width:100%;
+    background: rgb(44,44,52);
+    background: linear-gradient(90deg, rgba(28,28,38,0) 75%, rgba(28,28,38,1) 100%);
+    height: -webkit-fill-available;
+    z-index:3;
+  }
+  .one-line:hover span, .one-line:focus span {
+    display: inline-block;
+    animation-name: scroll-text;
+    animation-duration: 7s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+  }
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(0%);
+    }
+    90% {
+      transform: translateX(-100%);
+    }
+    95% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+
+
+
+
+
+
+
+
 @media only screen and (max-width: 540px) {
     :root {
         --max-size: 1.75rem;
