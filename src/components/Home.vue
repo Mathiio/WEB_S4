@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="head_slider">
-            <h1>{{ selectedMedia === 'films' ? 'Tendances actuelles' : 'Tendances sur les séries' }}</h1>
+            <h2>{{ selectedMedia === 'films' ? 'Tendances actuelles' : 'Tendances sur les séries' }}</h2>
             <router-link to="/Ratted">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div :class="{ 'wrapper': loadingTrend, 'none': !loadingTrend }">
@@ -28,7 +28,7 @@
     </section>
     <section>
         <div class="head_slider">
-            <h1>Les sorties toutes fraiches</h1>
+            <h2>Les sorties toutes fraiches</h2>
             <router-link to="/News">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
         <div :class="{ 'wrapper': loadingTrend, 'none': !loadingTrend }">
@@ -115,11 +115,10 @@ section {
     margin-bottom: var(--mid-space);
 }
 
-h1 {
+h2 {
     font-size: var(--mid-size);
     color: var(--third-color);
 }
-
 a {
     text-decoration: none;
     color: var(--first-color);
@@ -129,7 +128,6 @@ a {
     align-items: center;
     font-size: var(--min-size);
 }
-
 .wrapper {
     width: 100%;
     display: flex;
@@ -137,7 +135,6 @@ a {
     align-items: center;
     overflow: hidden;
 }
-
 .splide {
     width: 100%;
     cursor: grab;

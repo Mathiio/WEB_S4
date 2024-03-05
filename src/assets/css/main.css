@@ -126,7 +126,7 @@ body{
     font-family: 'medium';
     font-size: var(--min-size);
     color: var(--third-color-alt);
-    margin-bottom: var(--min-space);
+    margin-bottom: 4px;
 }
 .card_infos span {
     display: flex;
