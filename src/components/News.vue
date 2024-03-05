@@ -166,18 +166,12 @@ h2{
     overflow: hidden;
     margin-right: var(--big-space) !important;
 }
-@media only screen and (max-width: 940px) {
-    .latest {
-        width: var(--mid-card) !important;
-        height: var(--big-card);
-    }
-}
 @media only screen and (max-width: 540px) {
     section {
         padding-top: var(--max-space);
         padding-bottom: var(--max-space);
-        padding-right: var(--mid-space);
-        padding-left: var(--mid-space);
+        padding-right: var(--big-space);
+        padding-left: var(--big-space);
     }
 }
 </style>

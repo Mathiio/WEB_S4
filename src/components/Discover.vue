@@ -94,9 +94,8 @@ h1{
     width:100%;
     text-align: left;
     font-family:'medium';
-    font-size:var(--max-size);
+    font-size: var(--mid-size);
     color:var(--third-color);
-    margin-bottom:var(--big-space);
 }
 input{
     width: 100%;
@@ -147,20 +146,12 @@ article{
    margin-bottom: var(--max-space);
 }
 
-@media only screen and (max-width: 1100px) {
-    .show_medias{
-        grid-template-columns: repeat(2,1fr);
-    }
-}
 @media only screen and (max-width: 540px) {
-    .show_medias{
-        grid-template-columns: repeat(1,1fr);
-    }
     section {
         padding-top: var(--max-space);
         padding-bottom: var(--max-space);
-        padding-right: var(--mid-space);
-        padding-left: var(--mid-space);
+        padding-right: var(--big-space);
+        padding-left: var(--big-space);
     }
 }
 </style>
