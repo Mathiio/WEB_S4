@@ -103,7 +103,7 @@ export async function getSeriesGenres() {
 
 export async function sortSeries(series, order) {
     series.sort((a, b) => {
-        if (order === 'ordre croissant') {
+        if (order === 'ascendant') {
             return a.name.localeCompare(b.title);
         } else {
             return b.name.localeCompare(a.title);
@@ -141,27 +141,28 @@ export async function getSerie(serieId) {
   
 
 
-  export async function getLatestGenreSeries(genreId, series_number, max_page) {
+  export async function getLatestGenreSeries(genreId, series_number) {
     try {
         let latestSeries = [];
+        let uniqueNames = {};
+        let max_page=1;
+        const today = await getDate(0);
+
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
             const data = await response.json();
 
-            const currentDate = await getDate(0);
-            const filteredByDate = data.results.filter(serie => currentDate >= serie.first_air_date)
-
-            const filteredByGenre = filteredByDate.filter(serie => {
-                return serie.genre_ids.includes(genreId.id);
+            data.results.forEach((serie) => {
+                if (!uniqueNames[serie.title] && serie.vote_count > 10 && serie.first_air_date <= today && serie.genre_ids.includes(genreId.id)) {
+                    latestSeries.push(serie);
+                    uniqueNames[serie.name] = true;
+                }
             });
-
-            latestSeries.push(...filteredByGenre);
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            if (latestSeries.length < series_number) {
+                max_page++; 
             }
         }
         latestSeries.sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));

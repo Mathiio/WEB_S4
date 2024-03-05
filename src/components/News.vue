@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="head_slider">
-            <h1>Surfe sur les dernière arrivées</h1>
+            <h2>Surfe sur les dernières arrivées</h2>
         </div>
         <div :class="{ 'wrapper': loadinglatest, 'none': !loadinglatest }">
             <article class="skeleton_latest">
@@ -13,21 +13,25 @@
         </div>
         <div :class="{ 'wrapper': !loadinglatest, 'none': loadinglatest }">
             <Splide :options="{ rewind: true, pagination: false, autoplay: true}">
-                <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide latest" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
-                        <div class="gradient">
-                            <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
-                            <span>
-                                <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                                <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
-                            </span>
-                        </div>
+                <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide min_card" >
+                    <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
+                    <div class="card_infos">
+                        <h3 class="one-line">
+                            <div class="bg_oneline"></div>
+                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                        </h3>
+                        <span>
+                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
+                        </span>
+                    </div>
                 </SplideSlide>
             </Splide>
         </div>
     </section>
     <section>
         <div class="head_slider">
-            <h1>Les nouveautés côté {{ this.currentGenre.name }}</h1>
+            <h2>Dernières actualités côté {{ this.currentGenre.name }}</h2>
         </div>
         <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
             <article class="skeleton_latestGenre">
@@ -35,12 +39,16 @@
         </div>
         <div :class="{ 'wrapper': !loadinglatestGenre, 'none': loadinglatestGenre }">
             <Splide :options="{ rewind: true, pagination: false }">
-                <SplideSlide v-for="media in latestGenreMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide latest_genre" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
-                    <div class="gradient">
-                        <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
+                <SplideSlide v-for="media in latestGenreMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
+                    <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
+                    <div class="card_infos">
+                        <h3 class="one-line">
+                            <div class="bg_oneline"></div>
+                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                        </h3>
                         <span>
-                            <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                            <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
+                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
                         </span>
                     </div>
                 </SplideSlide>
@@ -94,9 +102,10 @@ section {
     display: flex;
     justify-content: start;
     flex-wrap: wrap;
-    padding: var(--max-space);
+    padding-right: var(--max-space);
+    padding-left: var(--max-space);
+    padding-bottom: var(--max-space);
 }
-
 .head_slider {
     width: 100%;
     display: flex;
@@ -104,24 +113,10 @@ section {
     align-items: center;
     margin-bottom: var(--mid-space);
 }
-
-h1 {
-    font-family: 'medium';
+h2{
     font-size: var(--mid-size);
-    color: var(--second-color-alt);
+    color: var(--third-color);
 }
-
-a {
-    text-decoration: none;
-    color: var(--first-color);
-    cursor: pointer;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    font-size: var(--min-size);
-    font-family: 'medium';
-}
-
 .wrapper {
     width: 100%;
     display: flex;
@@ -129,7 +124,6 @@ a {
     align-items: center;
     overflow: hidden;
 }
-
 .splide {
     width: 100%;
     cursor: grab;
@@ -145,62 +139,6 @@ a {
     position: relative;
     overflow: hidden;
     margin-right: var(--big-space) !important;
-}
-.latest_genre{
-    width: 100%;
-    height: 300px;
-} 
-.latest {
-    width: 400px !important;
-    height: 250px;
-}
-
-.gradient {
-    padding: var(--big-space);
-    display: flex;
-    justify-content: start;
-    align-items: end;
-    align-content: end;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100%;
-    background: rgb(0, 0, 0);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.6) 100%);
-}
-
-.gradient h3 {
-    font-family: 'medium';
-    font-size: var(--mid-size);
-    color: white;
-    margin-bottom: var(--min-space);
-}
-
-.gradient span {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-}
-
-.gradient span p:first-child {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: white;
-    padding-right: var(--min-space);
-    border-right: solid 1px white;
-    margin-right: var(--min-space);
-}
-
-.gradient span p {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: var(--first-color);
-}
-
-.gradient span p {
-    font-family: 'medium';
-    font-size: var(--min-size);
-    color: var(--first-color);
 }
 @media only screen and (max-width: 940px) {
     .latest {
@@ -223,7 +161,7 @@ a {
 
 
 <script>
-import { getImageUrl, formatDate } from '@services/utils.js'
+import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
@@ -265,7 +203,7 @@ export default {
         this.loadinglatest = true;
         try {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.latestMedias = await entityAPI.getLatest(12, 40);
+            this.latestMedias = await entityAPI.getLatest(24);
         } finally {
             this.loadinglatest = false;
         }
@@ -275,13 +213,14 @@ export default {
         const entityAPI = getEntityAPI(this.selectedMedia);
         this.currentGenre = await entityAPI.getRandomGenre();
         try {
-            this.latestGenreMedias = await entityAPI.getLatestGenre(this.currentGenre, 10, 40);
+            this.latestGenreMedias = await entityAPI.getLatestGenre(this.currentGenre, 10);
         } finally {
             this.loadinglatestGenre = false;
         }
     },
     getImageUrl,
     formatDate,
+    formatVote,
     Splide,
     SplideTrack,
     SplideSlide,

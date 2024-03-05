@@ -12,19 +12,23 @@
             <div class="select_box">      
                 <label for="sortOrder">Trier par</label>
                 <select name="sortOrder" id="sortOrder" v-model="sortOrder">
-                    <option value="ordre croissant">Ordre croissant</option>
-                    <option value="ordre décroissant">Ordre décroissant</option>
+                    <option value="ascendant">Ascendant</option>
+                    <option value="descendant">Descendant</option>
                 </select>
             </div>
         </div>
         <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="search">
         <div class="show_medias">
-            <article v-for="media in searchedMedias" class="results" :key="media.id"  @click="redirectToMedia(media.id)" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'">
-                <div class="gradient">
-                    <h3>{{ selectedMedia === 'films' ? media.title : media.name }}</h3>
+            <article v-for="media in filteredSearch" :key="media.id" @click="redirectToMedia(media.id)" class="min_card" >
+                <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
+                <div class="card_infos">
+                    <h3 class="one-line">
+                        <div class="bg_oneline"></div>
+                        <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                    </h3>
                     <span>
-                        <p class="date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                        <p class="vote">{{ media.vote_average }} <ion-icon name="star"></ion-icon></p>
+                        <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                        <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
                     </span>
                 </div>
             </article>
@@ -77,7 +81,9 @@ section{
     display: flex;
     justify-content: start;
     flex-wrap: wrap;
-    padding:var(--max-space);
+    padding-right: var(--max-space);
+    padding-left: var(--max-space);
+    padding-bottom: var(--max-space);
 }
 .show_medias{
     width:100%;
@@ -89,20 +95,20 @@ section{
 h1{
     width:100%;
     text-align: left;
-    font-family:'bold';
+    font-family:'medium';
     font-size:var(--max-size);
-    color:var(--second-color-alt);
+    color:var(--third-color);
     margin-bottom:var(--big-space);
 }
 input{
-    width:100%;
-    border: solid 1.5px var(--second-color-alt);
-    border-radius:var(--min-radius);
-    font-family: 'regular';
-    font-size:var(--min-size);
-    padding: var(--mid-space);
-    color:var(--second-color-alt);
-    margin-bottom:var(--big-space);
+    width: 100%;
+    background: var(--second-color-alt);
+    border-radius: var(--radius);
+    border: none;
+    font-size: var(--min-size);
+    padding: var(--big-space);
+    color: var(--third-color);
+    margin-bottom: var(--big-space);
 }
 input:focus{
     outline: none;
@@ -127,24 +133,16 @@ input:focus{
     margin-bottom:var(--mid-space);
 }
 select{
-    padding: var(--min-space);
+    padding: var(--mid-space);
     border-radius: var(--min-space);
-    border: solid 1.5px var(--second-color-alt);
-    color: var(--second-color-alt);
-    font-family: 'regular';
+    background: var(--second-color-alt);
+    color: var(--third-color-alt);
+    border: none;
     font-size: var(--min-size);
-    margin-right:var(--mid-size);
+    margin-right: var(--mid-size);
 }
 select:focus{
     outline: none;
-}
-article{
-    display: flex;
-    border-radius:var(--max-radius);
-    position: relative;
-    height:250px;
-    overflow: hidden;
-    cursor:pointer;
 }
 .gradient{
     padding:var(--big-space);
@@ -225,9 +223,9 @@ export default {
             genres: [],
             searchQuery: '',
             selectedGenre: 'tout',
-            sortOrder: 'ordre croissant',
+            sortOrder: 'ascendant',
             searchedMedias: [],
-            show_limit: 16,
+            show_limit: 20,
             loading: false,
         };
     },
@@ -235,20 +233,6 @@ export default {
         this.retrieveGenres();
     },
     watch: {
-        selectedGenre: {
-            handler(newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    this.search();
-                }
-            }
-        },
-        sortOrder: {
-            handler(newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    this.search();
-                }
-            }
-        },
         selectedMedia: {
             immediate: true,
             handler(newVal, oldVal) {
@@ -257,6 +241,19 @@ export default {
                 }
             }
         }
+    },
+    computed: {
+        filteredSearch() {
+            let filtered = this.searchedMedias.filter(media => {
+                return this.selectedGenre === 'tout' || media.genre_ids.includes(parseInt(this.selectedGenre));
+            });
+
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            return entityAPI.sortMedias(filtered, this.sortOrder).then(result => {
+                console.log(result);
+                return result.slice(0, this.show_limit);
+            });
+        },
     },
     methods: {
         redirectToMedia(mediaId) {
@@ -274,10 +271,7 @@ export default {
                 this.searchedMedias = [];
                 const entityAPI = getEntityAPI(this.selectedMedia);
                 try {
-                    this.searchedMedias = await entityAPI.searchMedia(query, 15);
-                    this.searchedMedias = await filterByGenre(this.searchedMedias, this.selectedGenre);
-                    this.searchedMedias = await entityAPI.sortMedias(this.searchedMedias, this.sortOrder);
-                    this.searchedMedias = this.searchedMedias.slice(0, this.show_limit);
+                    this.searchedMedias = await entityAPI.searchMedia(query, 10);
                 } finally {
                     this.loading = false;
                 }

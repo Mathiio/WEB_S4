@@ -98,7 +98,7 @@ export async function searchMovie(query, max_page){
 
 export async function sortMovies(movies, order) {
     movies.sort((a, b) => {
-        if (order === 'ordre croissant') {
+        if (order === 'ascendant') {
             return a.title.localeCompare(b.title);
         } else {
             return b.title.localeCompare(a.title);
@@ -167,27 +167,28 @@ export async function getMoviesRandomGenre() {
 
 
 
-export async function getLatestGenreMovies(genreId, movies_number, max_page) {
+export async function getLatestGenreMovies(genreId, movies_number) {
     try {
         let latestMovies = [];
+        let uniqueNames = {};
+        let max_page=1;
+        const today = await getDate(0);
+
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
             const data = await response.json();
 
-            const currentDate = await getDate(0);
-            const filteredByDate = data.results.filter(movie => currentDate >= movie.release_date)
-
-            const filteredByGenre = filteredByDate.filter(movie => {
-                return movie.genre_ids.includes(genreId.id);
+            data.results.forEach((movie) => {
+                if (!uniqueNames[movie.title] && movie.vote_count > 10 && movie.release_date <= today && movie.genre_ids.includes(genreId.id)) {
+                    latestMovies.push(movie);
+                    uniqueNames[movie.title] = true;
+                }
             });
-
-            latestMovies.push(...filteredByGenre);
-
-            if (max_page > data.total_pages) {
-                max_page = data.total_pages
+            if (latestMovies.length < movies_number) {
+                max_page++; 
             }
         }
         latestMovies.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));

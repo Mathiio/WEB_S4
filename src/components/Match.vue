@@ -108,12 +108,11 @@
     width:100%;
 }
 .result_list li{
-    border-bottom: solid 1px var(--second-color);
-    padding-top:var(--min-space);
-    padding-bottom:var(--min-space);
-    width:100%;
-    color: var(--second-color);
-    font-family: 'regular';
+    border-bottom: solid 1px var(--third-color-alt);
+    padding-top: var(--min-space);
+    padding-bottom: var(--min-space);
+    width: 100%;
+    color: var(--third-color-alt);
     font-size: var(--min-size);
     cursor:pointer;
     transition: all ease-in-out 0.15s;
@@ -130,8 +129,7 @@
     align-items: start;
 }
 .range_value {
-  color: var(--second-color);
-  font-family: 'regular';
+  color: var(--third-color-alt);
   font-size: var(--min-size);
   margin-left: var(--mid-space);
 }
@@ -148,7 +146,7 @@
   width: 100%;
   height: 4px;
   border-radius: 5px;
-  background: linear-gradient(to right, red 0%, red calc((var(--slider-value) - 20) * 100% / (300 - 20)), rgba(0,0,0,0.1) calc((var(--slider-value) - 20) * 100% / (300 - 20)), rgba(0,0,0,0.1) 100%);
+  background: linear-gradient(to right, #ffbb3d 0%, #ffbb3d calc((var(--slider-value) - 20) * 100% / (300 - 20)), #a6a6a681 calc((var(--slider-value) - 20) * 100% / (300 - 20)), #a6a6a681 100%);
   outline: none;
   position: relative;
 }
@@ -158,7 +156,7 @@
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: white;
+  background: #ffbb3d;
   border: solid 2px var(--first-color);
   cursor: pointer;
   position: relative;
@@ -168,7 +166,6 @@
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: white;
   border: solid 2px var(--first-color);
   transition: all ease-in-out .15s;
   cursor: pointer;
@@ -177,20 +174,15 @@
 }
 button{
     background-color: var(--first-color);
-    padding-top: var(--min-space);
-    padding-bottom: var(--min-space);
-    padding-right: var(--mid-space);
-    padding-left: var(--mid-space);
-    border-radius:var(--min-radius);
-    font-family: 'medium';
+    padding: var(--mid-space);
+    border-radius:var(--radius);
     font-size:var(--min-size);
-    color:white;
-    display: flex;
-    text-decoration:none;
-    cursor:pointer;
-    align-items: center;
+    color:var(--second-color);
+    display:flex;
     border:none;
+    font-family: 'medium';
     transition: all ease-in-out .15s;
+    cursor:pointer;
 }
 button:hover{
     background-color: var(--first-color-alt);
@@ -206,15 +198,16 @@ button:hover{
     margin-bottom:var(--max-space);
 }
 h1{
-    font-family:'bold';
+    width:100%;
+    text-align: left;
+    font-family:'medium';
     font-size:var(--max-size);
-    color:var(--second-color-alt);
-    margin-bottom:var(--max-space);
+    color:var(--third-color);
+    margin-bottom:var(--big-space);
 }
 h2{
-    font-family:'bold';
-    font-size:var(--mid-size);
-    color:var(--second-color-alt);
+    font-size: var(--mid-size);
+    color: var(--third-color);
     margin-bottom:var(--mid-space);
 }
 section{
@@ -223,7 +216,9 @@ section{
     justify-content: start;
     align-items: start;
     flex-direction: column;
-    padding:var(--max-space);
+    padding-right: var(--max-space);
+    padding-left: var(--max-space);
+    padding-bottom: var(--max-space);
 }
 form{
     width:100%;
@@ -269,28 +264,20 @@ form{
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s ease-in-out;
-    padding-top: var(--min-space);
-    padding-bottom: var(--min-space);
-    padding-right: var(--mid-space);
-    padding-left: var(--mid-space);
-    border-radius: var(--min-radius);
-    border: solid 1px var(--second-color);
-    color: var(--second-color);
-    font-family: 'regular';
+    padding: var(--mid-space);
+    border-radius: var(--radius);
+    border: solid 1px var(--third-color-alt);
+    color: var(--third-color-alt);
     font-size: var(--min-size);
     display: block;
 }
 .custom_select_2 span {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    padding-top: var(--min-space);
-    padding-bottom: var(--min-space);
-    padding-right: var(--mid-space);
-    padding-left: var(--mid-space);
-    border-radius: var(--min-radius);
-    border: solid 1px var(--second-color);
-    color: var(--second-color);
-    font-family: 'regular';
+    padding: var(--mid-space);
+    border-radius: var(--radius);
+    border: solid 1px var(--third-color-alt);
+    color: var(--third-color-alt);
     font-size: var(--min-size);
     display: flex;
     flex-direction: column;
@@ -302,7 +289,7 @@ form{
     text-align: center;
 }
 .custom_select_2 span svg {
-    fill:var(--second-color);
+    fill:var(--third-color-alt);
     transition: all 0.2s ease-in-out;
     margin-bottom:var(--mid-space);
 }

@@ -104,7 +104,9 @@ section {
     display: flex;
     justify-content: start;
     flex-wrap: wrap;
-    padding: var(--max-space);
+    padding-right: var(--max-space);
+    padding-left: var(--max-space);
+    padding-bottom: var(--max-space);
 }
 
 .head_slider {

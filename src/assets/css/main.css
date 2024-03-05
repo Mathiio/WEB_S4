@@ -11,7 +11,7 @@
     src: url("/fonts/Outfit-Light.woff2") format("woff2");
 }
 :root {
-    --first-color: hwb(39 24% 0%);
+    --first-color: hsl(39, 100%, 62%);
     --first-color-alt: hsl(39, 100%, 54%);
     --second-color: rgb(28, 28, 38);
     --second-color-alt: hsl(240, 8%, 19%);
