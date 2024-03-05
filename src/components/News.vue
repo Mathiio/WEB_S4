@@ -31,7 +31,7 @@
     </section>
     <section>
         <div class="head_slider">
-            <h2>Dernières actualités côté {{ this.currentGenre.name }}</h2>
+            <h2>Dernières actualités côté {{ this.genre1.name }}</h2>
         </div>
         <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
             <article class="skeleton_latestGenre">
@@ -39,7 +39,33 @@
         </div>
         <div :class="{ 'wrapper': !loadinglatestGenre, 'none': loadinglatestGenre }">
             <Splide :options="{ rewind: true, pagination: false }">
-                <SplideSlide v-for="media in latestGenreMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
+                <SplideSlide v-for="media in latestGenre1" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
+                    <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
+                    <div class="card_infos">
+                        <h3 class="one-line">
+                            <div class="bg_oneline"></div>
+                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
+                        </h3>
+                        <span>
+                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
+                        </span>
+                    </div>
+                </SplideSlide>
+            </Splide>
+        </div>
+    </section>
+    <section>
+        <div class="head_slider">
+            <h2>Dernières actualités côté {{ this.genre2.name }}</h2>
+        </div>
+        <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
+            <article class="skeleton_latestGenre">
+            </article>
+        </div>
+        <div :class="{ 'wrapper': !loadinglatestGenre, 'none': loadinglatestGenre }">
+            <Splide :options="{ rewind: true, pagination: false }">
+                <SplideSlide v-for="media in latestGenre2" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
                     <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
                     <div class="card_infos">
                         <h3 class="one-line">
@@ -174,10 +200,12 @@ export default {
   data() {
     return {
       latestMedias: [],
-      latestGenreMedias: [],
+      latestGenre1: [],
+      latestGenre2: [],
       loadinglatest: true,
       loadinglatestGenre: true,
-      currentGenre: '',
+      Genre1: '',
+      Genre2: '',
     };
   },
   created() {
@@ -211,9 +239,11 @@ export default {
     async retrieveLatestGenreMedias() {
         this.loadinglatestGenre = true;
         const entityAPI = getEntityAPI(this.selectedMedia);
-        this.currentGenre = await entityAPI.getRandomGenre();
+        this.genre1 = await entityAPI.getRandomGenre();
+        this.genre2 = await entityAPI.getRandomGenre();
         try {
-            this.latestGenreMedias = await entityAPI.getLatestGenre(this.currentGenre, 10);
+            this.latestGenre1 = await entityAPI.getLatestGenre(this.genre1, 10);
+            this.latestGenre2 = await entityAPI.getLatestGenre(this.genre2, 10);
         } finally {
             this.loadinglatestGenre = false;
         }

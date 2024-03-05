@@ -87,10 +87,8 @@ section{
 }
 .show_medias{
     width:100%;
-    display:grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-column-gap: var(--mid-space);
-    grid-row-gap: var(--big-space);
+    display:flex;
+    flex-wrap:wrap;
 }
 h1{
     width:100%;
@@ -144,49 +142,10 @@ select{
 select:focus{
     outline: none;
 }
-.gradient{
-    padding:var(--big-space);
-    display: flex;
-    justify-content: start;
-    align-items: end;
-    align-content: end;
-    flex-wrap:wrap;
-    width:100%;
-    height:100%;
-    background: rgb(0,0,0);
-    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.6) 100%);
+article{
+   margin-right: var(--big-space);
+   margin-bottom: var(--max-space);
 }
-.gradient h3{
-    font-family:'medium';
-    font-size:var(--min-size);
-    color:white;
-    margin-bottom:var(--min-space);
-}
-.gradient span{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    width:100%;
-}
-.gradient span p:first-child{
-    font-family:'medium';
-    font-size:var(--min-size);
-    color:white;
-    padding-right:var(--min-space);
-    border-right: solid 1px white;
-    margin-right:var(--min-space);
-}
-.gradient span p{
-    font-family:'medium';
-    font-size:var(--min-size);
-    color:var(--first-color);
-}
-.gradient span p{
-    font-family:'medium';
-    font-size:var(--min-size);
-    color:var(--first-color);
-}
-
 
 @media only screen and (max-width: 1100px) {
     .show_medias{
@@ -210,7 +169,7 @@ select:focus{
 
 
 <script>
-import { getImageUrl, formatDate, filterByGenre } from '@services/utils.js'
+import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
 
 
@@ -244,16 +203,34 @@ export default {
     },
     computed: {
         filteredSearch() {
-            let filtered = this.searchedMedias.filter(media => {
-                return this.selectedGenre === 'tout' || media.genre_ids.includes(parseInt(this.selectedGenre));
-            });
+            let filteredMedias = this.searchedMedias;
 
-            const entityAPI = getEntityAPI(this.selectedMedia);
-            return entityAPI.sortMedias(filtered, this.sortOrder).then(result => {
-                console.log(result);
-                return result.slice(0, this.show_limit);
-            });
-        },
+            if (this.selectedGenre !== 'tout') {
+                filteredMedias = filteredMedias.filter(media => {
+                    return media.genre_ids.includes(parseInt(this.selectedGenre));
+                });
+            }
+
+            if (this.sortOrder === 'ascendant') {
+                filteredMedias.sort((a, b) => {
+                    if(this.selectedMedia==='films'){
+                        return a.title.localeCompare(b.title);
+                    }else{
+                        return a.name.localeCompare(b.name);
+                    }
+                });
+            } else if (this.sortOrder === 'descendant') {
+                filteredMedias.sort((a, b) => {
+                    if(this.selectedMedia==='films'){
+                        return b.title.localeCompare(a.title);
+                    }else{
+                        return b.name.localeCompare(a.name);
+                    }
+                });
+            }
+
+            return filteredMedias;
+        }
     },
     methods: {
         redirectToMedia(mediaId) {
@@ -288,6 +265,7 @@ export default {
         },
         getImageUrl,
         formatDate,
+        formatVote,
     },
 }
 </script>

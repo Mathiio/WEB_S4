@@ -13,6 +13,8 @@
 
 <style>
 main {
+  height:100vh;
+  overflow: scroll;
   display: flex;
   justify-content: start;
   flex-direction: column;
