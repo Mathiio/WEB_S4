@@ -209,6 +209,7 @@ h2{
     font-size: var(--mid-size);
     color: var(--third-color);
     margin-bottom:var(--mid-space);
+    font-weight: 100;
 }
 section{
     width:100%;

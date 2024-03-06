@@ -34,9 +34,9 @@
     --radius: 12px;
 
     --min-card-height:200px;
-    --min-card-width:138px;
-    --mid-card-height:150px;
-    --mid-card-width:300px;
+    --min-card-width:128px;
+    --mid-card-height:140px;
+    --mid-card-width:280px;
 }
 * {
     margin: 0;

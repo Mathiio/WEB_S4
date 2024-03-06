@@ -95,6 +95,7 @@ h1{
     text-align: left;
     font-size: var(--mid-size);
     color:var(--third-color);
+    font-weight: 100;
 }
 input{
     width: 100%;

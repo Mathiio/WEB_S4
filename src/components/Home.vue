@@ -120,6 +120,7 @@ section {
 h2 {
     font-size: var(--mid-size);
     color: var(--third-color);
+    font-weight: 100;
 }
 a {
     text-decoration: none;
