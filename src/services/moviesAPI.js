@@ -26,8 +26,10 @@ export async function getTrendMovies(movies_number) {
                 max_page++; 
             }
         }
-        trendMovies = trendMovies.slice(0, movies_number);
+        
+        trendMovies = trendMovies.slice(0, movies_number)
         return trendMovies;
+        
   } catch (error) {
       console.error('Erreur lors du fetch de la requête:', error);
   }

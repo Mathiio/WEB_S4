@@ -3,7 +3,7 @@
         <h1>{{ selectedMedia === 'films' ? 'Une idée de film en tête ?' : 'Une idée de série en tête ?' }}</h1>
         <div class="selectors">
             <div class="select_box">
-                <label for="genre">Genre</label>
+                <label for="genre">Filtrer par</label>
                 <select name="genre" id="genre" v-model="selectedGenre">
                     <option value="tout">Tout</option>
                     <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
@@ -12,42 +12,21 @@
             <div class="select_box">      
                 <label for="sortOrder">Trier par</label>
                 <select name="sortOrder" id="sortOrder" v-model="sortOrder">
-                    <option value="ascendant">Ascendant</option>
-                    <option value="descendant">Descendant</option>
+                    <option value="ascendant">Ordre alphabétique</option>
+                    <option value="descendant">Ordre analphabétique</option>
+                    <option value="notes">Notes</option>
+                    <option value="dates">Dates</option>
                 </select>
             </div>
         </div>
         <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="search">
         <div class="show_medias">
-            <article v-for="media in filteredSearch" :key="media.id" @click="redirectToMedia(media.id)" class="min_card" >
-                <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
-                <div class="card_infos">
-                    <h3 class="one-line">
-                        <div class="bg_oneline"></div>
-                        <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
-                    </h3>
-                    <span>
-                        <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                        <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
-                    </span>
-                </div>
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
-            <article v-if="loading" class="skeleton_article">
-            </article>
+            <template v-if="loading">
+                <MinCardSkeleton v-for="index in 20" :key="index"></MinCardSkeleton>
+            </template>
+            <template v-else>
+                <MinCard v-for="media in filteredSearch" :key="media.id" :media="media" :selectedMedia="selectedMedia"></MinCard>
+            </template> 
         </div>
     </section>
 </template>
@@ -55,27 +34,6 @@
 
 
 <style scoped>
-.skeleton_article{
-  position: relative;
-  overflow: hidden;
-  background-color: rgba(236, 236, 236, 0.6);
-}
-.skeleton_article::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
-    animation: shimmer 1.4s infinite;
-    content: '';
-}
-@keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
-  }
 section{
     width:100%;
     display: flex;
@@ -87,8 +45,10 @@ section{
 }
 .show_medias{
     width:100%;
-    display:flex;
-    flex-wrap:wrap;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    grid-column-gap: var(--big-space);
+    grid-row-gap: var(--big-space);
 }
 h1{
     width:100%;
@@ -115,10 +75,10 @@ input:focus{
     justify-content: start;
     align-items: start;
     flex-direction: column;
+    margin-top:var(--big-space);
 }
 .select_box label{
-    font-family: 'regular';
-    color:var(--second-color);
+    color:var(--third-color-alt);
     font-size:var(--min-size);
     margin-bottom: var(--min-space);
 }
@@ -160,11 +120,16 @@ article{
 
 
 <script>
-import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
+import MinCardSkeleton from '@components/cards/MinCardSkeleton.vue';
+import MinCard from '@components/cards/MinCard.vue';
 
 
 export default {
+    components: {
+        MinCard,
+        MinCardSkeleton,
+    },
     props: {
         selectedMedia: String 
     },
@@ -173,7 +138,7 @@ export default {
             genres: [],
             searchQuery: '',
             selectedGenre: 'tout',
-            sortOrder: 'ascendant',
+            sortOrder: 'notes',
             searchedMedias: [],
             show_limit: 20,
             loading: false,
@@ -219,7 +184,16 @@ export default {
                     }
                 });
             }
-
+            else if (this.sortOrder === 'notes') {
+                filteredMedias = filteredMedias.sort((a, b) => b.vote_average - a.vote_average);
+            }
+            else if (this.sortOrder === 'dates') {
+                if(this.selectedMedia==='films'){
+                        filteredMedias = filteredMedias.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+                    }else{
+                        filteredMedias = filteredMedias.sort((a, b) => b.first_air_date - a.first_air_date);
+                    }
+            }
             return filteredMedias;
         }
     },
@@ -254,9 +228,6 @@ export default {
                 element.remove();
             });
         },
-        getImageUrl,
-        formatDate,
-        formatVote,
     },
 }
 </script>

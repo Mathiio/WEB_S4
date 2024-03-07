@@ -3,29 +3,14 @@
         <div class="head_slider">
             <h2>Surfe sur les dernières arrivées</h2>
         </div>
-        <div :class="{ 'wrapper': loadinglatest, 'none': !loadinglatest }">
-            <article class="skeleton_latest">
-            </article>
-            <article class="skeleton_latest">
-            </article>
-            <article class="skeleton_latest">
-            </article>
-        </div>
-        <div :class="{ 'wrapper': !loadinglatest, 'none': loadinglatest }">
+        <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false, autoplay: true}">
-                <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide min_card" >
-                    <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
-                    <div class="card_infos">
-                        <h3 class="one-line">
-                            <div class="bg_oneline"></div>
-                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
-                        </h3>
-                        <span>
-                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
-                        </span>
-                    </div>
-                </SplideSlide>
+                <template v-if="latestMedias.length > 0">
+                    <MinCard v-for="media in latestMedias" :key="media.id" :media="media" :selectedMedia="selectedMedia"></MinCard>
+                </template>
+                <template v-else>
+                    <MinCardSkeleton v-for="index in 10" :key="index"></MinCardSkeleton>
+                </template>
             </Splide>
         </div>
     </section>
@@ -33,25 +18,14 @@
         <div class="head_slider">
             <h2>Dernières actualités côté {{ this.genre1.name }}</h2>
         </div>
-        <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
-            <article class="skeleton_latestGenre">
-            </article>
-        </div>
-        <div :class="{ 'wrapper': !loadinglatestGenre, 'none': loadinglatestGenre }">
+        <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
-                <SplideSlide v-for="media in latestGenre1" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
-                    <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
-                    <div class="card_infos">
-                        <h3 class="one-line">
-                            <div class="bg_oneline"></div>
-                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
-                        </h3>
-                        <span>
-                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
-                        </span>
-                    </div>
-                </SplideSlide>
+                <template v-if="latestGenre1.length > 0">
+                    <MidCard v-for="media in latestGenre1" :key="media.id" :media="media" :selectedMedia="selectedMedia"></MidCard>
+                </template>
+                <template v-else>
+                    <MidCardSkeleton v-for="index in 10" :key="index"></MidCardSkeleton>
+                </template>
             </Splide>
         </div>
     </section>
@@ -59,25 +33,14 @@
         <div class="head_slider">
             <h2>Dernières actualités côté {{ this.genre2.name }}</h2>
         </div>
-        <div :class="{ 'wrapper': loadinglatestGenre, 'none': !loadinglatestGenre }">
-            <article class="skeleton_latestGenre">
-            </article>
-        </div>
-        <div :class="{ 'wrapper': !loadinglatestGenre, 'none': loadinglatestGenre }">
+        <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
-                <SplideSlide v-for="media in latestGenre2" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
-                    <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
-                    <div class="card_infos">
-                        <h3 class="one-line">
-                            <div class="bg_oneline"></div>
-                            <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
-                        </h3>
-                        <span>
-                            <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                            <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
-                        </span>
-                    </div>
-                </SplideSlide>
+                <template v-if="latestGenre2.length > 0">
+                    <MidCard v-for="media in latestGenre2" :key="media.id" :media="media" :selectedMedia="selectedMedia"></MidCard>
+                </template>
+                <template v-else>
+                    <MidCardSkeleton v-for="index in 10" :key="index"></MidCardSkeleton>
+                </template>
             </Splide>
         </div>
     </section>
@@ -182,13 +145,23 @@ h2{
 
 
 <script>
-import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 import { getEntityAPI } from '@services/interface.js';
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
+import MidCard from '@components/cards/MidCard.vue';
+import MidCardSkeleton from '@components/cards/MidCardSkeleton.vue';
+import MinCardSkeleton from '@components/cards/MinCardSkeleton.vue';
+import MinCard from '@components/cards/MinCard.vue';
+
 
 
 export default {
+  components: {
+    MidCard,
+    MinCard,
+    MidCardSkeleton,
+    MinCardSkeleton,
+  },
   props: {
     selectedMedia: String 
   },
@@ -197,8 +170,6 @@ export default {
       latestMedias: [],
       latestGenre1: [],
       latestGenre2: [],
-      loadinglatest: true,
-      loadinglatestGenre: true,
       genre1: '',
       genre2: '',
     };
@@ -243,9 +214,6 @@ export default {
             this.loadinglatestGenre = false;
         }
     },
-    getImageUrl,
-    formatDate,
-    formatVote,
     Splide,
     SplideTrack,
     SplideSlide,
