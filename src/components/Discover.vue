@@ -239,7 +239,7 @@ export default {
                 this.searchedMedias = [];
                 const entityAPI = getEntityAPI(this.selectedMedia);
                 try {
-                    this.searchedMedias = await entityAPI.searchMedia(query, 10);
+                    this.searchedMedias = await entityAPI.searchMedia(query, 8);
                 } finally {
                     this.loading = false;
                 }

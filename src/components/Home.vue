@@ -4,11 +4,7 @@
             <h2>{{ selectedMedia === 'films' ? 'Tendances actuelles' : 'Tendances sur les séries' }}</h2>
             <router-link to="/Ratted">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
         </div>
-        <div :class="{ 'wrapper': loadingTrend, 'none': !loadingTrend }">
-            <article class="skeleton_trend">
-            </article>
-        </div>
-        <div :class="{ 'wrapper': !loadingTrend, 'none': loadingTrend }">
+        <div class="wrapper">
             <Splide :options="{ rewind: true, autoplay: true, pagination: false  }">
                 <SplideSlide v-for="media in trendMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide mid_card">
                     <div class="img_banner" :style="'background:url(' + getImageUrl(media.backdrop_path) + ') center center; background-size: cover;'"></div>
@@ -39,7 +35,7 @@
             <article class="skeleton_news">
             </article>
         </div>
-        <div :class="{ 'wrapper': !loadingTrend, 'none': loadingLatest }">
+        <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
                 <SplideSlide v-for="media in latestMedias" :key="media.id" @click="redirectToMedia(media.id)" class="splide__slide min_card" >
                     <div class="img_poster" :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
@@ -108,7 +104,6 @@ section {
     padding-left: var(--max-space);
     padding-bottom: var(--max-space);
 }
-
 .head_slider {
     width: 100%;
     display: flex;
@@ -116,7 +111,6 @@ section {
     align-items: center;
     margin-bottom: var(--mid-space);
 }
-
 h2 {
     font-size: var(--mid-size);
     color: var(--third-color);

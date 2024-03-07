@@ -34,9 +34,9 @@
     --radius: 12px;
 
     --min-card-height:200px;
-    --min-card-width:128px;
-    --mid-card-height:140px;
-    --mid-card-width:280px;
+    --min-card-width:138px;
+    --mid-card-height:150px;
+    --mid-card-width:300px;
 }
 * {
     margin: 0;
@@ -80,6 +80,11 @@ body{
         --mid-card: 230px;
         --min-card: 180px;
         --tin-card: 180px;
+
+        --min-card-height:200px;
+        --min-card-width:128px;
+        --mid-card-height:140px;
+        --mid-card-width:280px;
     }
 }
 
@@ -127,7 +132,6 @@ body{
     font-size: var(--min-size);
     color: var(--third-color-alt);
     margin-bottom: 4px;
-    font-weight: 100;
 }
 .card_infos span {
     display: flex;
