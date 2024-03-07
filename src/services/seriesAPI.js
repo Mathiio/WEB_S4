@@ -147,9 +147,10 @@ export async function getSerie(serieId) {
         let uniqueNames = {};
         let max_page=1;
         const today = await getDate(0);
+        const old = await getDate(4);
 
         for (let page = 1; page <= max_page; page++) {
-            const response = await fetch(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}&release_date.gte=${old}`)
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête');
             }
@@ -248,3 +249,72 @@ export async function sortSeriesByDate(series, date) {
     return SeriesDate;
 }
 
+
+
+export async function getYearTrendSeries(year, series_number) {
+    try {
+        let yearSeries = [];
+        let uniqueNames = {};
+        let max_page=1;
+        const startDate = `${year}-01-01`;
+        const endDate = `${year}-12-31`;
+
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}&first_air_date.gte=${startDate}&first_air_date.lte=${endDate}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+
+            data.results.forEach((serie) => {
+                if (!uniqueNames[serie.name] && serie.vote_count > 10) {
+                    yearSeries.push(serie);
+                    uniqueNames[serie.name] = true;
+                }
+            });
+            if (yearSeries.length < series_number) {
+                max_page++; 
+            }
+        }
+        yearSeries.sort((a, b) => b.vote_average - a.vote_average);
+        yearSeries = yearSeries.slice(0, series_number);
+        return yearSeries;
+    }
+    catch (error) {
+        console.error('Erreur lors du fetch de la requête:', error);
+    }
+}
+
+
+
+export async function getGenreTrendSeries(genreId, series_number) {
+    try {
+        let latestSeries = [];
+        let uniqueNames = {};
+        let max_page=1;
+
+        for (let page = 1; page <= max_page; page++) {
+            const response = await fetch(`https://api.themoviedb.org/3/tv/popular?api_key=${import.meta.env.VITE_API_KEY}&language=fr-FR&page=${page}`);
+            if (!response.ok) {
+                throw new Error('Erreur lors de la requête');
+            }
+            const data = await response.json();
+
+            data.results.forEach((serie) => {
+                if (!uniqueNames[serie.name] && serie.vote_count > 10 && serie.vote_average >= 7.6 && serie.genre_ids.includes(genreId.id)) {
+                    latestSeries.push(serie);
+                    uniqueNames[serie.name] = true;
+                }
+            });
+            if (latestSeries.length < series_number) {
+                max_page++; 
+            }
+        }
+        latestSeries.sort((a, b) => b.vote_average - a.vote_average);
+        latestSeries = latestSeries.slice(0, series_number);
+        return latestSeries;
+    }
+    catch (error) {
+        console.error('Erreur lors du fetch de la requête:', error);
+    }
+}

@@ -6,7 +6,7 @@
                 <div class="quick_infos">
                     <p>{{ selectedMedia === 'films' ? media.runtime+" min" : media.number_of_episodes+" épisodes" }}</p>
                     <p>{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                    <p>{{ media.vote_average }}/10</p>
+                    <p>{{ formatVote(media.vote_average) }}/10</p>
                 </div>
                 <h1>{{ selectedMedia === 'films' ? media.title : media.name }}</h1>
                 <p class="overview">{{ media.overview }}</p>
@@ -32,7 +32,7 @@ section{
 }
 img{
     width:400px;
-    border-radius:var(--max-radius);
+    border-radius:var(--radius);
     margin-right:var(--big-space);
 }
 .media_data{
@@ -42,9 +42,9 @@ img{
     flex-direction: column;
 }
 h1{
-    font-family:'bold';
+    font-family:'medium';
     font-size:var(--max-size);
-    color:var(--second-color-alt);
+    color:var(--third-color);
     margin-bottom:var(--mid-space);
 }
 .quick_infos{
@@ -62,18 +62,18 @@ h1{
 .quick_infos p{
     padding-right:var(--mid-space);
     padding-left:var(--mid-space);
-    border-left: solid 1px var(--second-color);
-    font-family: 'regular';
-    color:var(--second-color);
+    border-left: solid 1px var(--third-color-alt);
+    color:var(--third-color);
     font-size:var(--min-size);
 }
 .overview{
-    font-family: 'regular';
-    color:var(--second-color-alt);
+    color:var(--third-color-alt);
     font-size:var(--min-size);
+    line-height: var(--mid-line);
+    font-weight: 100;
     width:100%;
     text-align: left;
-    margin-bottom:var(--mid-space);
+    margin-bottom:var(--big-space);
 }
 .media_genres{
     width:100%;
@@ -86,11 +86,10 @@ h1{
     padding-right:var(--mid-space);
     padding-top:var(--min-space);
     padding-bottom:var(--min-space);  
-    font-family: 'regular';
-    color:var(--second-color);
+    color:var(--third-color-alt);
     font-size:var(--min-size);
-    border: solid 1px var(--second-color);
-    border-radius:var(--min-radius);
+    border: solid 1px var(--third-color-alt);
+    border-radius:var(--radius);
     margin-right:var(--mid-space);
 }
 @media only screen and (max-width: 940px) {
@@ -116,7 +115,7 @@ h1{
 
 <script>
 import { getEntityAPI } from '@services/interface.js'
-import { getImageUrl, formatDate } from '@services/utils.js'
+import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 
 export default {
     props: {
@@ -139,6 +138,7 @@ export default {
         },
         getImageUrl,
         formatDate,
+        formatVote
     }
 }
 </script>

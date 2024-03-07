@@ -34,3 +34,16 @@ export async function getDate(include_month) {
   let day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+
+
+
+
+export async function getRandomYear(){
+      const startYear = 1980; 
+      const endYear = new Date().getFullYear();
+
+      const randomYear = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+  
+      return randomYear;
+}

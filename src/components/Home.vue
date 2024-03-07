@@ -40,39 +40,6 @@
 .none{
     display:none;
 }
-.skeleton_news{
-  background-color: rgba(236, 236, 236, 0.6);
-  width: var(--max-card);
-  height: var(--min-card);
-  border-radius: var(--max-radius);
-  margin-right: var(--big-space) !important;
-  position: relative;
-  overflow: hidden;
-}
-.skeleton_trend{
-    background-color: rgba(236, 236, 236, 0.6);
-    width: 100%;
-    height: var(--mid-card);
-    border-radius: var(--max-radius);
-    position: relative;
-    overflow: hidden;
-}
-.skeleton_trend::after, .skeleton_news::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
-    animation: shimmer 1.4s infinite;
-    content: '';
-}
-@keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
-  }
 section {
     width: 100%;
     display: flex;

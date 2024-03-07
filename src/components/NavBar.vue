@@ -2,8 +2,8 @@
     <nav>
         <router-link class="logo" to="/">MédiaMatch</router-link>
         <div>
-            <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')">Films</button>
-            <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')">Séries</button>
+            <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')" :disabled="disableMediaButtons">Films</button>
+            <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')" :disabled="disableMediaButtons">Séries</button>
         </div>
         <router-link class="match" to="/match">Chercher un match</router-link>
     </nav>
@@ -85,8 +85,22 @@ nav{
 export default {
     data() {
         return {
-            selectedMedia: 'films' 
+            selectedMedia: 'films',
+            isMediaPrevPage: false,
         };
+    },
+    created() {
+        this.isMediaPrevPage = this.$route.name === 'MediaPrev';
+    },
+    watch: {
+        $route(to, from) {
+            this.isMediaPrevPage = to.name === 'MediaPrev';
+        }
+    },
+    computed: {
+        disableMediaButtons() {
+            return this.isMediaPrevPage;
+        }
     },
     methods: {
         selectMedia(media) {

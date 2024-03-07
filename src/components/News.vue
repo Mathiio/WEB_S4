@@ -16,7 +16,7 @@
     </section>
     <section>
         <div class="head_slider">
-            <h2>Dernières actualités côté {{ this.genre1.name }}</h2>
+            <h2>Dernières actualités côté, {{ this.genre1.name }}</h2>
         </div>
         <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
@@ -31,7 +31,7 @@
     </section>
     <section>
         <div class="head_slider">
-            <h2>Dernières actualités côté {{ this.genre2.name }}</h2>
+            <h2>Dernières actualités côté, {{ this.genre2.name }}</h2>
         </div>
         <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
@@ -53,39 +53,6 @@
 .none{
     display:none;
 }
-.skeleton_latest{
-  background-color: rgba(236, 236, 236, 0.6);
-  width: 400px;
-  height: 250px;
-  border-radius: var(--max-radius);
-  margin-right: var(--big-space) !important;
-  position: relative;
-  overflow: hidden;
-}
-.skeleton_latestGenre{
-    background-color: rgba(236, 236, 236, 0.6);
-    width: 100%;
-    height: 300px;
-    border-radius: var(--max-radius);
-    position: relative;
-    overflow: hidden;
-}
-.skeleton_latest::after, .skeleton_latestGenre::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
-    animation: shimmer 1.4s infinite;
-    content: '';
-}
-@keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
-  }
 section {
     width: 100%;
     display: flex;
