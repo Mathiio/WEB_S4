@@ -7,9 +7,12 @@
                 <div class="bg_oneline"></div>
                 <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
             </h3>
-            <span>
-                <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
-                <p class="card_vote">{{ formatVote(media.vote_average) }}<ion-icon name="star"></ion-icon></p>
+            <span class="date_vote">
+                <p class="card_date">{{ selectedMedia === 'films' ? formatDate(media.release_date) :formatDate(media.first_air_date) }}</p>
+                <span class="card_vote">
+                    <p>{{ formatVote(media.vote_average) }}</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M394 480a16 16 0 01-9.39-3L256 383.76 127.39 477a16 16 0 01-24.55-18.08L153 310.35 23 221.2a16 16 0 019-29.2h160.38l48.4-148.95a16 16 0 0130.44 0l48.4 149H480a16 16 0 019.05 29.2L359 310.35l50.13 148.53A16 16 0 01394 480z"/></svg>
+                </span>
             </span>
         </div>
     </SplideSlide>
@@ -49,12 +52,12 @@
     width: 100%;
 }
 .card_infos h3 {
-    font-family: 'medium';
+    /* font-family: 'medium'; */
     font-size: var(--min-size);
     color: var(--third-color-alt);
     margin-bottom: 4px;
 }
-.card_infos span {
+.date_vote{
     display: flex;
     justify-content: start;
     align-items: center;
@@ -75,6 +78,11 @@
     color: var(--first-color);
     display: flex;
     align-items: center;
+}
+.card_vote svg{
+    width: var(--tin-size);
+    fill:var(--first-color);
+    margin-left: 4px;
 }
 .one-line {
     width: 100%;

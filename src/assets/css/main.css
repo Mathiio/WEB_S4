@@ -66,14 +66,15 @@ body{
         --max-size: 2.2rem;
         --mid-size: 1.3rem;
         --min-size: 0.9rem;
+        --tin-size: 0.8rem;
         --max-line: 2.2rem;
         --mid-line: 1.3rem;
         --min-line: 0.9rem;
     
         --max-space: 40px;
-        --big-space: 25px;
-        --mid-space: 14px;
-        --min-space: 10px;
+        --big-space: 24px;
+        --mid-space: 12px;
+        --min-space: 6px;
 
         --max-card: 350px;
         --big-card: 280px;
