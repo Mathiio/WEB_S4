@@ -80,6 +80,7 @@ h1{
     display: flex;
     justify-content: start;
     align-items: center;
+    flex-wrap: wrap;
 }
 .media_genres p{
     padding-left:var(--mid-space);
@@ -91,6 +92,7 @@ h1{
     border: solid 1px var(--third-color-alt);
     border-radius:var(--radius);
     margin-right:var(--mid-space);
+    margin-bottom: var(--mid-space);
 }
 @media only screen and (max-width: 940px) {
     img{
@@ -106,8 +108,8 @@ h1{
     section {
         padding-top: var(--max-space);
         padding-bottom: var(--max-space);
-        padding-right: var(--mid-space);
-        padding-left: var(--mid-space);
+        padding-right: var(--big-space);
+        padding-left: var(--big-space);
     }
 }
 </style>

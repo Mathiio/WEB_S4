@@ -91,7 +91,7 @@
         ul{
             flex-direction: row;
             width:auto;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             width:100%;
         }
