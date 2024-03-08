@@ -12,8 +12,8 @@
             <div class="select_box">      
                 <label for="sortOrder">Trier par</label>
                 <select name="sortOrder" id="sortOrder" v-model="sortOrder">
-                    <option value="ascendant">Ordre alphabétique</option>
-                    <option value="descendant">Ordre analphabétique</option>
+                    <option value="ascendant">A-Z</option>
+                    <option value="descendant">Z-A</option>
                     <option value="notes">Notes</option>
                     <option value="dates">Dates</option>
                 </select>
