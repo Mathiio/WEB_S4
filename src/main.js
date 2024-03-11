@@ -1,35 +1,32 @@
-import './assets/css/main.css'
+import "./assets/css/main.css";
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import Home from '@components/Home.vue'
-import Discover from '@components/Discover.vue'
-import News from '@components/News.vue'
-import Ratted from '@components/Ratted.vue'
-import Match from '@components/Match.vue'
-import MediaPrev from '@components/MediaPrev.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import VueSplide from '@splidejs/vue-splide';
-
+import { createApp } from "vue";
+import App from "./App.vue";
+import Home from "@components/Home.vue";
+import Discover from "@components/Discover.vue";
+import News from "@components/News.vue";
+import Ratted from "@components/Ratted.vue";
+import Match from "@components/Match.vue";
+import MediaPrev from "@components/MediaPrev.vue";
+import { createRouter, createWebHistory } from "vue-router";
+import VueSplide from "@splidejs/vue-splide";
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/discover', component: Discover },
-  { path: '/news', component: News },
-  { path: '/ratted', component: Ratted },
-  { path: '/match', component: Match },
-  { path: '/MediaPrev/:id', component: MediaPrev, name: 'MediaPrev' },
-]
+  { path: "/", component: Home },
+  { path: "/discover", component: Discover },
+  { path: "/news", component: News },
+  { path: "/ratted", component: Ratted },
+  { path: "/match", component: Match },
+  { path: "/MediaPrev/:id", component: MediaPrev, name: "MediaPrev" },
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes, 
-})
+  routes,
+});
 
-const app = createApp(App)
+const app = createApp(App);
 
-
-app.use(router)
+app.use(router);
 app.use(VueSplide);
-app.mount('#app')
-
+app.mount("#app");
