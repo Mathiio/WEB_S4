@@ -2,8 +2,10 @@
     <nav>
         <router-link class="logo" to="/">MédiaMatch</router-link>
         <div>
-            <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')" :disabled="disableMediaButtons">Films</button>
-            <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')" :disabled="disableMediaButtons">Séries</button>
+            <button :class="{ 'active_media': selectedMedia === 'films' }" @click="selectMedia('films')"
+                :disabled="disableMediaButtons">Films</button>
+            <button :class="{ 'active_media': selectedMedia === 'series' }" @click="selectMedia('series')"
+                :disabled="disableMediaButtons">Séries</button>
         </div>
         <router-link class="match" to="/match">Chercher un match</router-link>
     </nav>
@@ -11,70 +13,80 @@
 
 
 <style scoped>
-div{
+div {
     display: flex;
     justify-content: start;
     align-items: center;
 }
-.logo{
-    font-size:var(--mid-size);
-    color:var(--third-color);
-    font-family:'medium';
-    text-decoration:none;
-    display:none;
+
+.logo {
+    font-size: var(--mid-size);
+    color: var(--third-color);
+    font-family: 'medium';
+    text-decoration: none;
+    display: none;
 }
-div button{
+
+div button {
     color: var(--third-color-alt);
     font-size: var(--min-size);
-    margin-right:var(--mid-space);
+    margin-right: var(--mid-space);
     transition: all ease-in-out .15s;
     background-color: transparent;
-    border:none;
+    border: none;
     cursor: pointer;
-    font-family:'medium';
+    font-family: 'medium';
 }
-div button.active_media{
+
+div button.active_media {
     color: var(--first-color);
 }
-div button:hover{
+
+div button:hover {
     color: var(--first-color);
     transition: all ease-in-out .15s;
 }
-nav{
-    width:100%;
+
+nav {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: var(--max-space);
 }
-.match{
+
+.match {
     background-color: var(--first-color);
     padding: var(--mid-space);
-    border-radius:var(--radius);
-    font-size:var(--min-size);
-    color:var(--second-color);
-    text-decoration:none;
+    border-radius: var(--radius);
+    font-size: var(--min-size);
+    color: var(--second-color);
+    text-decoration: none;
     font-family: 'medium';
     transition: all ease-in-out .15s;
 }
-.match:hover{
+
+.match:hover {
     background-color: var(--first-color-alt);
     transition: all ease-in-out .15s;
 }
 
 @media only screen and (max-width: 760px) {
-    .logo{
-        display:block;
+    .logo {
+        display: block;
     }
-    .match{
-        display:none;
+
+    .match {
+        display: none;
     }
-    nav{
+
+    nav {
         padding: var(--big-space);
     }
-    div button{
-        margin-right:0px;
-        margin-left:var(--mid-space);
+
+    div button {
+        margin-right: 0px;
+        margin-left: var(--mid-space);
     }
 }
 </style>

@@ -2,14 +2,17 @@
     font-family: 'outfit';
     src: url("/fonts/Outfit.woff2") format("woff2");
 }
+
 @font-face {
     font-family: 'medium';
     src: url("/fonts/Outfit-Medium.woff2") format("woff2");
 }
+
 @font-face {
     font-family: 'light';
     src: url("/fonts/Outfit-Light.woff2") format("woff2");
 }
+
 :root {
     --first-color: hsl(39, 100%, 62%);
     --first-color-alt: hsl(39, 100%, 54%);
@@ -30,37 +33,42 @@
     --big-space: 24px;
     --mid-space: 12px;
     --min-space: 6px;
-    
+
     --radius: 12px;
 
-    --min-card-height:200px;
-    --min-card-width:138px;
-    --mid-card-height:150px;
-    --mid-card-width:300px;
+    --min-card-height: 200px;
+    --min-card-width: 138px;
+    --mid-card-height: 150px;
+    --mid-card-width: 300px;
 }
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-body{
+
+body {
     display: flex;
-    width:100%;
+    width: 100%;
     justify-content: space-between;
     align-items: start;
     flex-wrap: wrap;
-    font-family:'outfit';
+    font-family: 'outfit';
     background-color: var(--second-color);
 }
-#app{
-    width:100%;
+
+#app {
+    width: 100%;
     display: flex;
     justify-content: start;
     align-items: start;
 }
-.splide__track{
+
+.splide__track {
     width: 100%;
-}  
+}
+
 @media only screen and (max-width: 940px) {
     :root {
         --max-size: 2.2rem;
@@ -70,7 +78,7 @@ body{
         --max-line: 2.2rem;
         --mid-line: 1.3rem;
         --min-line: 0.9rem;
-    
+
         --max-space: 40px;
         --big-space: 24px;
         --mid-space: 12px;
@@ -82,10 +90,10 @@ body{
         --min-card: 180px;
         --tin-card: 180px;
 
-        --min-card-height:200px;
-        --min-card-width:128px;
-        --mid-card-height:140px;
-        --mid-card-width:280px;
+        --min-card-height: 200px;
+        --min-card-width: 128px;
+        --mid-card-height: 140px;
+        --mid-card-width: 280px;
     }
 }
 

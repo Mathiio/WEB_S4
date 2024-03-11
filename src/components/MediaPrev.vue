@@ -4,8 +4,9 @@
             <img :src="getImageUrl(media.poster_path)" alt="">
             <div class="media_data">
                 <div class="quick_infos">
-                    <p>{{ selectedMedia === 'films' ? media.runtime+" min" : media.number_of_episodes+" épisodes" }}</p>
-                    <p>{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date) }}</p>
+                    <p>{{ selectedMedia === 'films' ? media.runtime + " min" : media.number_of_episodes + " épisodes" }}</p>
+                    <p>{{ selectedMedia === 'films' ? formatDate(media.release_date) : formatDate(media.first_air_date)
+                        }}</p>
                     <p>{{ formatVote(media.vote_average) }}/10</p>
                 </div>
                 <h1>{{ selectedMedia === 'films' ? media.title : media.name }}</h1>
@@ -23,87 +24,99 @@
 
 
 <style scoped>
-section{
-    width:100%;
+section {
+    width: 100%;
     padding: var(--max-space);
     display: flex;
     justify-content: start;
     align-items: start;
 }
-img{
-    width:400px;
-    border-radius:var(--radius);
-    margin-right:var(--big-space);
+
+img {
+    width: 400px;
+    border-radius: var(--radius);
+    margin-right: var(--big-space);
 }
-.media_data{
+
+.media_data {
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: column;
 }
-h1{
-    font-family:'medium';
-    font-size:var(--max-size);
-    color:var(--third-color);
-    margin-bottom:var(--mid-space);
+
+h1 {
+    font-family: 'medium';
+    font-size: var(--max-size);
+    color: var(--third-color);
+    margin-bottom: var(--mid-space);
 }
-.quick_infos{
-    width:100%;
+
+.quick_infos {
+    width: 100%;
     display: flex;
     justify-content: start;
     align-items: center;
-    margin-bottom:var(--mid-space);
+    margin-bottom: var(--mid-space);
 }
-.quick_infos p:first-child{
-    padding-right:var(--mid-space);
-    padding-left:0px;
+
+.quick_infos p:first-child {
+    padding-right: var(--mid-space);
+    padding-left: 0px;
     border: none
 }
-.quick_infos p{
-    padding-right:var(--mid-space);
-    padding-left:var(--mid-space);
+
+.quick_infos p {
+    padding-right: var(--mid-space);
+    padding-left: var(--mid-space);
     border-left: solid 1px var(--third-color-alt);
-    color:var(--third-color);
-    font-size:var(--min-size);
+    color: var(--third-color);
+    font-size: var(--min-size);
 }
-.overview{
-    color:var(--third-color-alt);
-    font-size:var(--min-size);
+
+.overview {
+    color: var(--third-color-alt);
+    font-size: var(--min-size);
     line-height: var(--mid-line);
     font-weight: 100;
-    width:100%;
+    width: 100%;
     text-align: left;
-    margin-bottom:var(--big-space);
+    margin-bottom: var(--big-space);
 }
-.media_genres{
-    width:100%;
+
+.media_genres {
+    width: 100%;
     display: flex;
     justify-content: start;
     align-items: center;
     flex-wrap: wrap;
 }
-.media_genres p{
-    padding-left:var(--mid-space);
-    padding-right:var(--mid-space);
-    padding-top:var(--min-space);
-    padding-bottom:var(--min-space);  
-    color:var(--third-color-alt);
-    font-size:var(--min-size);
+
+.media_genres p {
+    padding-left: var(--mid-space);
+    padding-right: var(--mid-space);
+    padding-top: var(--min-space);
+    padding-bottom: var(--min-space);
+    color: var(--third-color-alt);
+    font-size: var(--min-size);
     border: solid 1px var(--third-color-alt);
-    border-radius:var(--radius);
-    margin-right:var(--mid-space);
+    border-radius: var(--radius);
+    margin-right: var(--mid-space);
     margin-bottom: var(--mid-space);
 }
+
 @media only screen and (max-width: 940px) {
-    img{
-        width:100%;
+    img {
+        width: 100%;
         margin-bottom: var(--big-space);
         margin-right: 0px;
     }
-    section{
+
+    section {
         flex-direction: column;
     }
 }
+
 @media only screen and (max-width: 540px) {
     section {
         padding-top: var(--max-space);
@@ -121,7 +134,7 @@ import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 
 export default {
     props: {
-        selectedMedia: String 
+        selectedMedia: String
     },
     data() {
         return {

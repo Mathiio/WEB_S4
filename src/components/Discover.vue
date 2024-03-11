@@ -9,7 +9,7 @@
                     <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
                 </select>
             </div>
-            <div class="select_box">      
+            <div class="select_box">
                 <label for="sortOrder">Trier par</label>
                 <select name="sortOrder" id="sortOrder" v-model="sortOrder">
                     <option value="ascendant">A-Z</option>
@@ -19,14 +19,17 @@
                 </select>
             </div>
         </div>
-        <input class="search_film" type="text" :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'" v-model="searchQuery" @input="search">
+        <input class="search_film" type="text"
+            :placeholder="selectedMedia === 'films' ? 'Rechercher un film' : 'Rechercher une série'"
+            v-model="searchQuery" @input="search">
         <div class="show_medias">
             <template v-if="loading">
                 <MinCardSkeleton v-for="index in 20" :key="index"></MinCardSkeleton>
             </template>
             <template v-else>
-                <MinCard v-for="media in filteredSearch" :key="media.id" :media="media" :selectedMedia="selectedMedia"></MinCard>
-            </template> 
+                <MinCard v-for="media in filteredSearch" :key="media.id" :media="media" :selectedMedia="selectedMedia">
+                </MinCard>
+            </template>
         </div>
     </section>
 </template>
@@ -34,8 +37,8 @@
 
 
 <style scoped>
-section{
-    width:100%;
+section {
+    width: 100%;
     display: flex;
     justify-content: start;
     flex-wrap: wrap;
@@ -43,21 +46,24 @@ section{
     padding-left: var(--max-space);
     padding-bottom: var(--max-space);
 }
-.show_medias{
-    width:100%;
-    display:grid;
+
+.show_medias {
+    width: 100%;
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
     grid-column-gap: var(--big-space);
     grid-row-gap: var(--big-space);
 }
-h1{
-    width:100%;
+
+h1 {
+    width: 100%;
     text-align: left;
     font-size: var(--mid-size);
-    color:var(--third-color);
+    color: var(--third-color);
     font-weight: 100;
 }
-input{
+
+input {
     width: 100%;
     background: var(--second-color-alt);
     border-radius: var(--radius);
@@ -67,29 +73,34 @@ input{
     color: var(--third-color);
     margin-bottom: var(--big-space);
 }
-input:focus{
+
+input:focus {
     outline: none;
 }
-.select_box{
+
+.select_box {
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: column;
-    margin-top:var(--big-space);
+    margin-top: var(--big-space);
 }
-.select_box label{
-    color:var(--third-color-alt);
-    font-size:var(--min-size);
+
+.select_box label {
+    color: var(--third-color-alt);
+    font-size: var(--min-size);
     margin-bottom: var(--min-space);
 }
-.selectors{
-    width:100%;
+
+.selectors {
+    width: 100%;
     display: flex;
     justify-content: start;
     align-items: center;
-    margin-bottom:var(--mid-space);
+    margin-bottom: var(--mid-space);
 }
-select{
+
+select {
     padding: var(--mid-space);
     border-radius: var(--min-space);
     background: var(--second-color-alt);
@@ -98,12 +109,14 @@ select{
     font-size: var(--min-size);
     margin-right: var(--mid-size);
 }
-select:focus{
+
+select:focus {
     outline: none;
 }
-article{
-   margin-right: var(--big-space);
-   margin-bottom: var(--max-space);
+
+article {
+    margin-right: var(--big-space);
+    margin-bottom: var(--max-space);
 }
 
 @media only screen and (max-width: 540px) {
@@ -131,7 +144,7 @@ export default {
         MinCardSkeleton,
     },
     props: {
-        selectedMedia: String 
+        selectedMedia: String
     },
     data() {
         return {
@@ -169,17 +182,17 @@ export default {
 
             if (this.sortOrder === 'ascendant') {
                 filteredMedias.sort((a, b) => {
-                    if(this.selectedMedia==='films'){
+                    if (this.selectedMedia === 'films') {
                         return a.title.localeCompare(b.title);
-                    }else{
+                    } else {
                         return a.name.localeCompare(b.name);
                     }
                 });
             } else if (this.sortOrder === 'descendant') {
                 filteredMedias.sort((a, b) => {
-                    if(this.selectedMedia==='films'){
+                    if (this.selectedMedia === 'films') {
                         return b.title.localeCompare(a.title);
-                    }else{
+                    } else {
                         return b.name.localeCompare(a.name);
                     }
                 });
@@ -188,11 +201,11 @@ export default {
                 filteredMedias = filteredMedias.sort((a, b) => b.vote_average - a.vote_average);
             }
             else if (this.sortOrder === 'dates') {
-                if(this.selectedMedia==='films'){
-                        filteredMedias = filteredMedias.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-                    }else{
-                        filteredMedias = filteredMedias.sort((a, b) => b.first_air_date - a.first_air_date);
-                    }
+                if (this.selectedMedia === 'films') {
+                    filteredMedias = filteredMedias.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+                } else {
+                    filteredMedias = filteredMedias.sort((a, b) => b.first_air_date - a.first_air_date);
+                }
             }
             return filteredMedias;
         }
@@ -208,7 +221,7 @@ export default {
         async search() {
             const query = this.searchQuery.trim();
             this.resetResults()
-            if (query.length > 0) { 
+            if (query.length > 0) {
                 this.loading = true;
                 this.searchedMedias = [];
                 const entityAPI = getEntityAPI(this.selectedMedia);
@@ -218,11 +231,11 @@ export default {
                     this.loading = false;
                 }
             } else {
-                this.searchedMedias = []; 
-                this.loading = false; 
+                this.searchedMedias = [];
+                this.loading = false;
             }
         },
-        resetResults(){
+        resetResults() {
             const resultsElements = document.querySelectorAll('.results');
             resultsElements.forEach(element => {
                 element.remove();

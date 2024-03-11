@@ -1,8 +1,36 @@
-import { getTrendMovies, getLatestMovies, getMoviesGenres, searchMovie, sortMovies, getMovie, getLatestGenreMovies, getMoviesRandomGenre, sortMoviesByTime, sortMoviesByGenres, sortMoviesByDate, getYearTrendMovies, getGenreTrendMovies } from '@services/moviesAPI.js';
-import { getTrendSeries, getLatestSeries, getSeriesGenres, searchSerie, sortSeries, getSerie, getLatestGenreSeries, getSeriesRandomGenre, sortSeriesByTime, sortSeriesByGenres, sortSeriesByDate, getYearTrendSeries, getGenreTrendSeries } from '@services/seriesAPI.js';
+import {
+  getTrendMovies,
+  getLatestMovies,
+  getMoviesGenres,
+  searchMovie,
+  sortMovies,
+  getMovie,
+  getLatestMoviesByGenre,
+  getMoviesRandomGenre,
+  sortMoviesByTime,
+  sortMoviesByGenres,
+  sortMoviesByDate,
+  getTrendMoviesByYear,
+  getTrendMoviesByGenre,
+} from "@services/moviesAPI.js";
+import {
+  getTrendSeries,
+  getLatestSeries,
+  getSeriesGenres,
+  searchSerie,
+  sortSeries,
+  getSerie,
+  getLatestSeriesByGenre,
+  getSeriesRandomGenre,
+  sortSeriesByTime,
+  sortSeriesByGenres,
+  sortSeriesByDate,
+  getTrendSeriesByYear,
+  getTrendSeriesByGenre,
+} from "@services/seriesAPI.js";
 
 export function getEntityAPI(entityType) {
-  if (entityType === 'films') {
+  if (entityType === "films") {
     return {
       getTrend: getTrendMovies,
       getLatest: getLatestMovies,
@@ -10,30 +38,31 @@ export function getEntityAPI(entityType) {
       searchMedia: searchMovie,
       sortMedias: sortMovies,
       getMedia: getMovie,
-      getLatestGenre: getLatestGenreMovies,
+      getLatestMediasByGenre: getLatestMoviesByGenre,
       getRandomGenre: getMoviesRandomGenre,
       sortMediasByTime: sortMoviesByTime,
       sortMediasByDate: sortMoviesByDate,
       sortMediasByGenres: sortMoviesByGenres,
-      getYearTrend: getYearTrendMovies,
-      getGenreTrend: getGenreTrendMovies,
+      getTrendByYear: getTrendMoviesByYear,
+      getTrendByGenre: getTrendMoviesByGenre,
     };
-  } else if (entityType === 'series') {
+  } else if (entityType === "series") {
     return {
       getTrend: getTrendSeries,
       getLatest: getLatestSeries,
       getGenres: getSeriesGenres,
       searchMedia: searchSerie,
+      sortMedias: sortSeries,
       getMedia: getSerie,
-      getLatestGenre: getLatestGenreSeries,
+      getLatestMediasByGenre: getLatestSeriesByGenre,
       getRandomGenre: getSeriesRandomGenre,
       sortMediasByTime: sortSeriesByTime,
       sortMediasByDate: sortSeriesByDate,
       sortMediasByGenres: sortSeriesByGenres,
-      getYearTrend: getYearTrendSeries,
-      getGenreTrend: getGenreTrendSeries,
+      getTrendByYear: getTrendSeriesByYear,
+      getTrendByGenre: getTrendSeriesByGenre,
     };
   } else {
-    throw new Error('Type d\'entité non pris en charge');
+    throw new Error("Type d'entité non pris en charge");
   }
 }
