@@ -1,6 +1,5 @@
 <template>
     <section>
-        <!-- <h1>Trouve ton  !</h1> -->
         <form @submit.prevent="submitForm" v-if="!showfilm">
             <div class="question">
                 <h2>Durée de cette séance ?</h2>

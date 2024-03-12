@@ -113,16 +113,20 @@ export async function searchSerie(query, max_page) {
   }
 }
 
-export async function sortSeries(series, order) {
-  series.sort((a, b) => {
-    if (order === "ascendant") {
-      return a.name.localeCompare(b.title);
-    } else {
-      return b.name.localeCompare(a.title);
-    }
-  });
-  return series;
-}
+export function sortSeries(series, order) {
+    series.sort((a, b) => {
+      if (order === "ascendant") {
+        return a.name.localeCompare(b.name);
+      } else if (order === "descendant") {
+        return b.name.localeCompare(a.name);
+      } else if (order === "notes") {
+        return b.vote_average - a.vote_average;
+      } else if (order === "dates") {
+        return new Date(b.first_air_date) - new Date(a.first_air_date);
+      }
+    });
+    return series;
+  }
 
 export async function getSerie(serieId) {
   try {

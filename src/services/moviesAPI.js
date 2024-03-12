@@ -106,12 +106,16 @@ export async function searchMovie(query, max_page) {
   }
 }
 
-export async function sortMovies(movies, order) {
+export function sortMovies(movies, order) {
   movies.sort((a, b) => {
     if (order === "ascendant") {
       return a.title.localeCompare(b.title);
-    } else {
+    } else if (order === "descendant") {
       return b.title.localeCompare(a.title);
+    } else if (order === "notes") {
+      return b.vote_average - a.vote_average;
+    } else if (order === "dates") {
+      return new Date(b.release_date) - new Date(a.release_date);
     }
   });
   return movies;

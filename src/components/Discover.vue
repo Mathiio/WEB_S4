@@ -151,7 +151,7 @@ export default {
             genres: [],
             searchQuery: '',
             selectedGenre: 'tout',
-            sortOrder: 'notes',
+            sortOrder: localStorage.getItem('sortOrder') || 'notes',
             searchedMedias: [],
             show_limit: 20,
             loading: false,
@@ -168,7 +168,10 @@ export default {
                     this.search();
                 }
             }
-        }
+        },
+        sortOrder(newValue) {
+            localStorage.setItem('sortOrder', newValue);
+        },
     },
     computed: {
         filteredSearch() {
@@ -180,33 +183,8 @@ export default {
                 });
             }
 
-            if (this.sortOrder === 'ascendant') {
-                filteredMedias.sort((a, b) => {
-                    if (this.selectedMedia === 'films') {
-                        return a.title.localeCompare(b.title);
-                    } else {
-                        return a.name.localeCompare(b.name);
-                    }
-                });
-            } else if (this.sortOrder === 'descendant') {
-                filteredMedias.sort((a, b) => {
-                    if (this.selectedMedia === 'films') {
-                        return b.title.localeCompare(a.title);
-                    } else {
-                        return b.name.localeCompare(a.name);
-                    }
-                });
-            }
-            else if (this.sortOrder === 'notes') {
-                filteredMedias = filteredMedias.sort((a, b) => b.vote_average - a.vote_average);
-            }
-            else if (this.sortOrder === 'dates') {
-                if (this.selectedMedia === 'films') {
-                    filteredMedias = filteredMedias.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-                } else {
-                    filteredMedias = filteredMedias.sort((a, b) => b.first_air_date - a.first_air_date);
-                }
-            }
+            const entityAPI = getEntityAPI(this.selectedMedia);
+            filteredMedias = entityAPI.sortMedias(filteredMedias, this.sortOrder);
             return filteredMedias;
         }
     },
