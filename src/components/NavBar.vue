@@ -97,19 +97,21 @@ nav {
 export default {
     data() {
         return {
-            selectedMedia: 'films',
-            //Ici pour local storage directement dans data ou appeler une méthode
+            selectedMedia: localStorage.getItem('selectedMedia') || 'films',
             isMediaPrevPage: false,
         };
     },
     created() {
         this.isMediaPrevPage = this.$route.name === 'MediaPrev';
+        this.$emit('media-selected', localStorage.getItem('selectedMedia') || 'films');
     },
     watch: {
         $route(to, from) {
             this.isMediaPrevPage = to.name === 'MediaPrev';
-        }
-        // Faire un watch sur selected media et update local storage
+        },
+        selectedMedia(newValue) {
+            localStorage.setItem('selectedMedia', newValue);
+        },
     },
     computed: {
         disableMediaButtons() {
