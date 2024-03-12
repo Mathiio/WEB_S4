@@ -137,17 +137,17 @@ export default {
     },
     async created() {
         await this.getYear();
-        this.retrieveYearMedias();
         await this.getGenre();
-        this.retrieveGenreMedias();
+        this.retrieveTrendMedias();
     },
     watch: {
         selectedMedia: {
             immediate: true,
             handler(newVal, oldVal) {
                 if (newVal !== oldVal) {
-                    this.retrieveYearMedias();
-                    this.retrieveGenreMedias();
+                    this.yearMedias= [];
+                    this.genreMedias= [];
+                    this.retrieveTrendMedias();
                 }
             }
         }
@@ -159,17 +159,14 @@ export default {
         async getYear() {
             this.year = await getRandomYear();
         },
-        async retrieveYearMedias() {
+        async retrieveTrendMedias() {
             const entityAPI = getEntityAPI(this.selectedMedia);
-            this.yearMedias = await entityAPI.getTrendByYear(this.year, 24);
+            this.yearMedias = await entityAPI.getTrendByYear(this.year, 20);
+            this.genreMedias = await entityAPI.getTrendByGenre(this.genre, 12);
         },
         async getGenre() {
             const entityAPI = getEntityAPI(this.selectedMedia);
             this.genre = await entityAPI.getRandomGenre();
-        },
-        async retrieveGenreMedias() {
-            const entityAPI = getEntityAPI(this.selectedMedia);
-            this.genreMedias = await entityAPI.getTrendByGenre(this.genre, 18);
         },
         getRandomYear,
         Splide,

@@ -151,6 +151,8 @@ export default {
             immediate: true,
             handler(newVal, oldVal) {
                 if (newVal !== oldVal) {
+                    this.trendMedias= [];
+                    this.latestMedias= [];
                     this.retrieveTrendMedias();
                     this.retrieveLatestMedias();
                 }

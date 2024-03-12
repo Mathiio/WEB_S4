@@ -160,6 +160,9 @@ export default {
             immediate: true,
             handler(newVal, oldVal) {
                 if (newVal !== oldVal) {
+                    this.latestMedias= [];
+                    this.latestGenre1= [];
+                    this.latestGenre2= [];
                     this.retrieveLatestMedias();
                     this.retrieveLatestGenreMedias();
                 }

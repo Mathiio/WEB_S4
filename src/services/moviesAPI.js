@@ -304,8 +304,8 @@ export async function getTrendMoviesByYear(year, movies_number) {
     let yearMovies = [];
     let uniqueNames = {};
     let max_page = 1;
-    const startDate = `${year}-01-01`;
-    const endDate = `${year}-12-31`;
+    const startDate = new Date(`${year}-01-01`)
+    const endDate = new Date(`${year}-12-31`)
 
     for (let page = 1; page <= max_page; page++) {
       const response = await fetch(
@@ -319,7 +319,9 @@ export async function getTrendMoviesByYear(year, movies_number) {
       const data = await response.json();
 
       data.results.forEach((movie) => {
-        if (!uniqueNames[movie.title] && movie.vote_count > 10) {
+        if (!uniqueNames[movie.title] && 
+            movie.vote_count > 10
+        ) {
           yearMovies.push(movie);
           uniqueNames[movie.title] = true;
         }
@@ -338,7 +340,7 @@ export async function getTrendMoviesByYear(year, movies_number) {
 
 export async function getTrendMoviesByGenre(genreId, movies_number) {
   try {
-    let latestMovies = [];
+    let trendMovies = [];
     let uniqueNames = {};
     let max_page = 1;
 
@@ -357,20 +359,23 @@ export async function getTrendMoviesByGenre(genreId, movies_number) {
         if (
           !uniqueNames[movie.title] &&
           movie.vote_count > 10 &&
-          movie.vote_average >= 7.6 &&
-          movie.genre_ids.includes(genreId.id)
+          movie.vote_average >= 7.7
         ) {
-          latestMovies.push(movie);
+          trendMovies.push(movie);
           uniqueNames[movie.title] = true;
         }
       });
-      if (latestMovies.length < movies_number) {
+      trendMovies.filter((movie) => {
+          movie.genre_ids.includes(genreId.id)
+      });
+
+      if (trendMovies.length < movies_number) {
         max_page++;
       }
     }
-    latestMovies.sort((a, b) => b.vote_average - a.vote_average);
-    latestMovies = latestMovies.slice(0, movies_number);
-    return latestMovies;
+    trendMovies.sort((a, b) => b.vote_average - a.vote_average);
+    trendMovies = trendMovies.slice(0, movies_number);
+    return trendMovies;
   } catch (error) {
     console.error("Erreur lors du fetch de la requête:", error);
   }

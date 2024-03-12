@@ -98,6 +98,7 @@ export default {
     data() {
         return {
             selectedMedia: 'films',
+            //Ici pour local storage directement dans data ou appeler une méthode
             isMediaPrevPage: false,
         };
     },
@@ -108,6 +109,7 @@ export default {
         $route(to, from) {
             this.isMediaPrevPage = to.name === 'MediaPrev';
         }
+        // Faire un watch sur selected media et update local storage
     },
     computed: {
         disableMediaButtons() {
