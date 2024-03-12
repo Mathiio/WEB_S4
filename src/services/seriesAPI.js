@@ -280,14 +280,14 @@ export async function getTrendSeriesByYear(year, series_number) {
     let yearSeries = [];
     let uniqueNames = {};
     let max_page = 1;
-    const startDate = `${year}-01-01`;
-    const endDate = `${year}-12-31`;
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31`);
 
     for (let page = 1; page <= max_page; page++) {
       const response = await fetch(
         `https://api.themoviedb.org/3/discover/tv?api_key=${
           import.meta.env.VITE_API_KEY
-        }&language=fr-FR&page=${page}&first_air_date.gte=${startDate}&first_air_date.lte=${endDate}`
+        }&language=fr-FR&page=${page}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}`
       );
       if (!response.ok) {
         throw new Error("Erreur lors de la requête");
@@ -314,7 +314,7 @@ export async function getTrendSeriesByYear(year, series_number) {
 
 export async function getTrendSeriesByGenre(genreId, series_number) {
   try {
-    let latestSeries = [];
+    let trendSeries = [];
     let uniqueNames = {};
     let max_page = 1;
 
@@ -333,20 +333,23 @@ export async function getTrendSeriesByGenre(genreId, series_number) {
         if (
           !uniqueNames[serie.name] &&
           serie.vote_count > 10 &&
-          serie.vote_average >= 7.6 &&
-          serie.genre_ids.includes(genreId.id)
+          serie.vote_average >= 7.7
         ) {
-          latestSeries.push(serie);
+          trendSeries.push(serie);
           uniqueNames[serie.name] = true;
         }
       });
-      if (latestSeries.length < series_number) {
+      trendSeries.filter((serie) => {
+        serie.genre_ids.includes(genreId.id);
+      });
+
+      if (trendSeries.length < series_number) {
         max_page++;
       }
     }
-    latestSeries.sort((a, b) => b.vote_average - a.vote_average);
-    latestSeries = latestSeries.slice(0, series_number);
-    return latestSeries;
+    trendSeries.sort((a, b) => b.vote_average - a.vote_average);
+    trendSeries = trendSeries.slice(0, series_number);
+    return trendSeries;
   } catch (error) {
     console.error("Erreur lors du fetch de la requête:", error);
   }
