@@ -14,11 +14,27 @@
 <style>
 main {
   height: 100vh;
-  overflow: scroll;
+  overflow-y: scroll;
   display: flex;
   justify-content: start;
   flex-direction: column;
   align-items: start;
+}
+main::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+main::-webkit-scrollbar
+{
+	width: 10px;
+}
+
+main::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: var(--second-color-alt);
 }
 
 @media only screen and (max-width: 760px) {
