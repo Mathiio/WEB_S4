@@ -3,20 +3,19 @@
         <router-link class="logo" to="/">MédiaMatch</router-link>
         <ul>
             <li>
-                <router-link to="/"><ion-icon name="home"></ion-icon><span>Accueil</span></router-link>
+                <router-link to="/"><HomePicto></HomePicto><span>Accueil</span></router-link>
             </li>
             <li>
-                <router-link to="/discover"><ion-icon
-                        name="navigate-circle"></ion-icon><span>Découvrir</span></router-link>
+                <router-link to="/discover"><DiscoverPicto></DiscoverPicto><span>Découvrir</span></router-link>
             </li>
             <li>
-                <router-link to="/news"><ion-icon name="time"></ion-icon><span>Nouveautés</span></router-link>
+                <router-link to="/news"><NewsPicto></NewsPicto><span>Nouveautés</span></router-link>
             </li>
             <li>
-                <router-link to="/ratted"><ion-icon name="star"></ion-icon><span>Mieux notés</span></router-link>
+                <router-link to="/ratted"><RattedPicto></RattedPicto><span>Mieux notés</span></router-link>
             </li>
             <li>
-                <router-link to="/match"><ion-icon name="heart-circle"></ion-icon><span>Match</span></router-link>
+                <router-link to="/match"><MatchPicto></MatchPicto><span>Match</span></router-link>
             </li>
         </ul>
     </div>
@@ -76,11 +75,6 @@ a:hover {
     transition: all ease-in-out .15s;
 }
 
-a ion-icon {
-    margin-right: var(--min-space);
-    font-size: var(--mid-size);
-}
-
 @media only screen and (max-width: 760px) {
     div {
         display: flex;
@@ -115,3 +109,39 @@ a ion-icon {
     }
 }
 </style>
+<style>
+a svg {
+    margin-right: var(--min-space);
+    fill: var(--third-color-alt);
+    width: var(--min-size);
+    transition: all ease-in-out .15s;
+}
+.router-link-active svg {
+    fill: var(--first-color);
+}
+a:hover svg {
+    fill: var(--first-color);
+    transition: all ease-in-out .15s;
+}
+</style>
+
+
+
+
+<script>
+import HomePicto from '@assets/svg/HomePicto.vue';
+import NewsPicto from '@assets/svg/NewsPicto.vue';
+import RattedPicto from '@assets/svg/RattedPicto.vue';
+import DiscoverPicto from '@assets/svg/DiscoverPicto.vue';
+import MatchPicto from '@assets/svg/MatchPicto.vue';
+
+export default {
+    components: {
+        HomePicto,
+        NewsPicto,
+        RattedPicto,
+        DiscoverPicto,
+        MatchPicto,
+    },
+}
+</script>

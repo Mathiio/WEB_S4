@@ -2,7 +2,7 @@
     <section>
         <div class="head_slider">
             <h2>{{ selectedMedia === 'films' ? 'Tendances actuelles' : 'Tendances sur les séries' }}</h2>
-            <router-link to="/Ratted">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
+            <router-link to="/Ratted">Voir plus<ArrowPicto></ArrowPicto></router-link>
         </div>
         <div class="wrapper">
             <Splide :options="{ rewind: true, autoplay: true, pagination: false }">
@@ -19,7 +19,7 @@
     <section>
         <div class="head_slider">
             <h2>Les sorties toutes fraiches</h2>
-            <router-link to="/News">Voir plus<ion-icon name="chevron-forward-outline"></ion-icon></router-link>
+            <router-link to="/News">Voir plus<ArrowPicto></ArrowPicto></router-link>
         </div>
         <div class="wrapper">
             <Splide :options="{ rewind: true, pagination: false }">
@@ -67,7 +67,7 @@ h2 {
     font-weight: 100;
 }
 
-a {
+.head_slider a {
     text-decoration: none;
     color: var(--first-color);
     cursor: pointer;
@@ -75,6 +75,7 @@ a {
     justify-content: start;
     align-items: center;
     font-size: var(--min-size);
+    white-space: nowrap;
 }
 
 .wrapper {
@@ -112,6 +113,13 @@ a {
     }
 }
 </style>
+<style>
+.head_slider a svg{
+    stroke: var(--first-color);
+    width: var(--min-size);
+    margin-left: var(--min-space);
+}
+</style>
 
 
 
@@ -124,6 +132,7 @@ import MidCard from '@components/cards/MidCard.vue';
 import MidCardSkeleton from '@components/cards/MidCardSkeleton.vue';
 import MinCardSkeleton from '@components/cards/MinCardSkeleton.vue';
 import MinCard from '@components/cards/MinCard.vue';
+import ArrowPicto from '@assets/svg/ArrowPicto.vue';
 
 
 export default {
@@ -132,6 +141,9 @@ export default {
         MinCard,
         MidCardSkeleton,
         MinCardSkeleton,
+        Splide,
+        SplideSlide,
+        ArrowPicto,
     },
     props: {
         selectedMedia: String
@@ -171,9 +183,6 @@ export default {
             const entityAPI = getEntityAPI(this.selectedMedia);
             this.latestMedias = await entityAPI.getLatest(20);
         },
-        Splide,
-        SplideTrack,
-        SplideSlide,
     }
 }
 </script>

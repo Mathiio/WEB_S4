@@ -138,6 +138,8 @@ export default {
         MinCard,
         MidCardSkeleton,
         MinCardSkeleton,
+        Splide,
+        SplideSlide,
     },
     props: {
         selectedMedia: String
@@ -194,9 +196,6 @@ export default {
                 this.loadinglatestGenre = false;
             }
         },
-        Splide,
-        SplideTrack,
-        SplideSlide,
     }
 }
 </script>

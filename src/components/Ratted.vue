@@ -123,6 +123,8 @@ export default {
         MinCard,
         MidCardSkeleton,
         MinCardSkeleton,
+        Splide,
+        SplideSlide,
     },
     props: {
         selectedMedia: String
@@ -169,9 +171,6 @@ export default {
             this.genre = await entityAPI.getRandomGenre();
         },
         getRandomYear,
-        Splide,
-        SplideTrack,
-        SplideSlide,
     }
 }
 </script>
