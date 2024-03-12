@@ -113,7 +113,7 @@ a:hover {
 a svg {
     margin-right: var(--min-space);
     fill: var(--third-color-alt);
-    width: var(--min-size);
+    width: var(--mid-size);
     transition: all ease-in-out .15s;
 }
 .router-link-active svg {
