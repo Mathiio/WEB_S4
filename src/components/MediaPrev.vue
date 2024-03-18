@@ -149,7 +149,6 @@ export default {
         async retrieveMedia(mediaId) {
             const entityAPI = getEntityAPI(this.selectedMedia);
             this.media = await entityAPI.getMedia(mediaId);
-            console.log(this.media);
         },
         getImageUrl,
         formatDate,

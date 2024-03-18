@@ -4,8 +4,8 @@
             <div class="question">
                 <h2>Durée de cette séance ?</h2>
                 <div class="range_show">
-                    <input type="range" min="20" max="300" value="50" v-model="sliderValue" class="slider">
-                    <p class="range_value">{{ sliderValue }}min</p>
+                    <input type="range" min="20" max="300" value="50" v-model="selectedRuntime" class="slider">
+                    <p class="range_value">{{ selectedRuntime }}min</p>
                 </div>
             </div>
             <div class="question">
@@ -25,21 +25,21 @@
                 <h2>Plutôt vintage ou dernier cri ?</h2>
                 <div class="age_div">
                     <label class="custom_select_2">
-                        <input type="radio" value="old" v-model="filterOptions">
+                        <input type="radio" value="old" v-model="selectedAge">
                         <span>
                             <OldPicto></OldPicto>
                             <p>{{ selectedMedia === 'films' ? "Films anciens" : "Séries anciennes" }}</p>
                         </span>
                     </label>
                     <label class="custom_select_2">
-                        <input type="radio" value="young" v-model="filterOptions">
+                        <input type="radio" value="young" v-model="selectedAge">
                         <span>
                             <YoungPicto></YoungPicto>
                             <p>{{ selectedMedia === 'films' ? "Films récents" : "Séries récentes" }}</p>
                         </span>
                     </label>
                     <label class="custom_select_2">
-                        <input type="radio" value="none" v-model="filterOptions">
+                        <input type="radio" value="none" v-model="selectedAge">
                         <span>
                             <MidAgePicto></MidAgePicto>
                             <p>Sans préférence</p>
@@ -53,8 +53,10 @@
         <div v-if="showfilm" class="search_result">
             <h2>Ces films sont faits pour vous !</h2>
             <ul class="result_list">
-                <li v-for="media in matchMedia.slice(0, 20) " @click="redirectToMedia(media.id)" :key="media.id">{{
-            selectedMedia === 'films' ? media.title : media.name }}</li>
+                <li v-for="media in matchMedia.slice(0, 20) " @click="redirectToMedia(media.id)" :key="media.id">
+                    <p>{{selectedMedia === 'films' ? media.title : media.name }}</p>
+                    <p>{{ media.runtime }} min</p>
+                </li>
             </ul>
         </div>
     </section>
@@ -95,14 +97,17 @@
 }
 
 .result_list li {
-    border-bottom: solid 1px var(--third-color-alt);
+    border-bottom: solid 0.5px var(--third-color-alt);
     padding-top: var(--min-space);
     padding-bottom: var(--min-space);
     width: 100%;
     color: var(--third-color-alt);
     font-size: var(--min-size);
+    font-family: 'light';
     cursor: pointer;
     transition: all ease-in-out 0.15s;
+    display: flex;
+    justify-content: space-between;
 }
 
 .result_list li:hover {
@@ -138,7 +143,7 @@
     width: 100%;
     height: 4px;
     border-radius: 5px;
-    background: linear-gradient(to right, #ffbb3d 0%, #ffbb3d calc((var(--slider-value) - 20) * 100% / (300 - 20)), #a6a6a681 calc((var(--slider-value) - 20) * 100% / (300 - 20)), #a6a6a681 100%);
+    background: linear-gradient(to right, #ffbb3d 0%, #ffbb3d calc((var(--selectedRuntime) - 20) * 100% / (300 - 20)), #a6a6a681 calc((var(--selectedRuntime) - 20) * 100% / (300 - 20)), #a6a6a681 100%);
     outline: none;
     position: relative;
 }
@@ -428,6 +433,7 @@ import { getEntityAPI } from '@services/interface.js'
 import OldPicto from '@assets/svg/OldPicto.vue';
 import YoungPicto from '@assets/svg/YoungPicto.vue';
 import MidAgePicto from '@assets/svg/MidAgePicto.vue';
+import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
 
 
 
@@ -445,8 +451,8 @@ export default {
             genres: [],
             selectedGenres: [],
             matchMedia: [],
-            sliderValue: '20',
-            filterOptions: {
+            selectedRuntime: '20',
+            selectedAge: {
                 old: false,
                 young: false,
                 none: false
@@ -459,11 +465,11 @@ export default {
         this.retrieveGenres();
     },
     mounted() {
-        this.$el.style.setProperty('--slider-value', `${this.sliderValue}`);
+        this.$el.style.setProperty('--selectedRuntime', `${this.selectedRuntime}`);
     },
     watch: {
-        sliderValue() {
-            this.$el.style.setProperty('--slider-value', `${this.sliderValue}`);
+        selectedRuntime() {
+            this.$el.style.setProperty('--selectedRuntime', `${this.selectedRuntime}`);
         }
     },
     methods: {
@@ -479,9 +485,7 @@ export default {
                 this.loading = true;
 
                 const entityAPI = getEntityAPI(this.selectedMedia);
-                this.matchMedia = await entityAPI.sortMediasByGenres(this.selectedGenres, 60)
-                this.matchMedia = await entityAPI.sortMediasByDate(this.matchMedia, this.filterOptions)
-                this.matchMedia = await entityAPI.sortMediasByTime(this.matchMedia, this.sliderValue)
+                this.matchMedia = await entityAPI.sortMediasByMatch(this.selectedGenres, this.selectedAge, this.selectedRuntime,  20)
 
                 if (this.matchMedia.length === 0) {
                     this.matchMedia.push({ title: "Aucun média trouvé", name: "aucun média n'a été trouvé avec tes critères de recherche" });
@@ -495,6 +499,7 @@ export default {
                 console.error('Erreur lors de la recherche de films:', error);
             }
         },
+        formatDate,
     },
 };
 </script>

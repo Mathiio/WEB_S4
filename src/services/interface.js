@@ -7,9 +7,7 @@ import {
   getMovie,
   getLatestMoviesByGenre,
   getMoviesRandomGenre,
-  sortMoviesByTime,
-  sortMoviesByGenres,
-  sortMoviesByDate,
+  sortMoviesByMatch,
   getTrendMoviesByYear,
   getTrendMoviesByGenre,
 } from "@services/moviesAPI.js";
@@ -22,9 +20,7 @@ import {
   getSerie,
   getLatestSeriesByGenre,
   getSeriesRandomGenre,
-  sortSeriesByTime,
-  sortSeriesByGenres,
-  sortSeriesByDate,
+  sortSeriesByMatch,
   getTrendSeriesByYear,
   getTrendSeriesByGenre,
 } from "@services/seriesAPI.js";
@@ -40,9 +36,7 @@ export function getEntityAPI(entityType) {
       getMedia: getMovie,
       getLatestMediasByGenre: getLatestMoviesByGenre,
       getRandomGenre: getMoviesRandomGenre,
-      sortMediasByTime: sortMoviesByTime,
-      sortMediasByDate: sortMoviesByDate,
-      sortMediasByGenres: sortMoviesByGenres,
+      sortMediasByMatch: sortMoviesByMatch,
       getTrendByYear: getTrendMoviesByYear,
       getTrendByGenre: getTrendMoviesByGenre,
     };
@@ -56,9 +50,7 @@ export function getEntityAPI(entityType) {
       getMedia: getSerie,
       getLatestMediasByGenre: getLatestSeriesByGenre,
       getRandomGenre: getSeriesRandomGenre,
-      sortMediasByTime: sortSeriesByTime,
-      sortMediasByDate: sortSeriesByDate,
-      sortMediasByGenres: sortSeriesByGenres,
+      sortMediasByMatch: sortSeriesByMatch,
       getTrendByYear: getTrendSeriesByYear,
       getTrendByGenre: getTrendSeriesByGenre,
     };

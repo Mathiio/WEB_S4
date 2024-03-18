@@ -227,80 +227,57 @@ export async function getLatestMoviesByGenre(genreId, movies_number) {
   }
 }
 
-export async function sortMoviesByTime(movies, runtime) {
-  const filteredMovies = [];
-  for (const movie of movies) {
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${
-          import.meta.env.VITE_API_KEY
-        }&language=fr-FR`
-      );
-      if (!response.ok) {
-        throw new Error("Erreur lors de la requête");
-      }
-      const data = await response.json();
-      const movieRuntime = data.runtime;
-
-      if (movieRuntime < runtime) {
-        filteredMovies.push(movie);
-      }
-    } catch (error) {
-      console.error("Erreur lors du tri des films par durée moyenne:", error);
-    }
-  }
-  return filteredMovies;
-}
-
-export async function sortMoviesByGenres(selectedGenres, max_page) {
+export async function sortMoviesByMatch(genres, date, runtime, movies_number) {
   try {
-    let genresMovies = [];
+    let matchMovies = [];
     let uniqueNames = [];
+    let max_page = 1;
+    let selectedAge = "";
+    if (date === "young") {
+      selectedAge = `&release_date.gte=${getDate(264)}`;
+    } else if (date === "old") {
+      selectedAge = `&release_date.lte=${getDate(264)}`;
+    }
 
-    for (let page = 1; page <= max_page; page++) {
+    while (matchMovies.length < movies_number) {
+      const selectedGenres = genres.join(",");
       const response = await fetch(
         `https://api.themoviedb.org/3/discover/movie?api_key=${
           import.meta.env.VITE_API_KEY
-        }&language=fr-FR&page=${page}`
+        }&language=fr-FR&page=${max_page}&with_genres=${selectedGenres}${selectedAge}`
       );
+
       if (!response.ok) {
         throw new Error("Erreur lors de la requête");
       }
+
       const data = await response.json();
-      const matchGenres = data.results.filter((movie) => {
-        return selectedGenres.every((genreId) =>
-          movie.genre_ids.includes(genreId)
-        );
+      const pageResults = data.results.filter((movie) => {
+        if (!uniqueNames[movie.title]) {
+          uniqueNames[movie.title] = true;
+          return true;
+        }
+        return false;
       });
 
-      genresMovies.push(...matchGenres);
-    }
-    genresMovies = genresMovies.filter((movie) => {
-      if (!uniqueNames[movie.title]) {
-        uniqueNames[movie.title] = true;
-        return true;
+      for (const movie of pageResults) {
+        const movieRuntime = await getMovieRuntime(movie.id);
+        if (movieRuntime !== null && movieRuntime <= runtime) { 
+          const movieWithRuntime = {
+            ...movie,
+            runtime: movieRuntime
+          };
+          matchMovies.push(movieWithRuntime);
+        }
       }
-      return false;
-    });
-    return genresMovies;
+
+      max_page++;
+    }
+    console.log(matchMovies)
+    return matchMovies;
   } catch (error) {
     console.error("Erreur lors du fetch de la requête:", error);
   }
-}
-
-export async function sortMoviesByDate(movies, date) {
-  let MoviesDate = [];
-  const limitDate = await getDate(264);
-
-  if (date === "young") {
-    MoviesDate = movies.filter((movie) => movie.release_date > limitDate);
-  } else if (date === "old") {
-    MoviesDate = movies.filter((movie) => movie.release_date < limitDate);
-  } else {
-    MoviesDate = movies;
-  }
-
-  return MoviesDate;
 }
 
 export async function getTrendMoviesByYear(year, movies_number) {

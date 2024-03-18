@@ -114,19 +114,19 @@ export async function searchSerie(query, max_page) {
 }
 
 export function sortSeries(series, order) {
-    series.sort((a, b) => {
-      if (order === "ascendant") {
-        return a.name.localeCompare(b.name);
-      } else if (order === "descendant") {
-        return b.name.localeCompare(a.name);
-      } else if (order === "notes") {
-        return b.vote_average - a.vote_average;
-      } else if (order === "dates") {
-        return new Date(b.first_air_date) - new Date(a.first_air_date);
-      }
-    });
-    return series;
-  }
+  series.sort((a, b) => {
+    if (order === "ascendant") {
+      return a.name.localeCompare(b.name);
+    } else if (order === "descendant") {
+      return b.name.localeCompare(a.name);
+    } else if (order === "notes") {
+      return b.vote_average - a.vote_average;
+    } else if (order === "dates") {
+      return new Date(b.first_air_date) - new Date(a.first_air_date);
+    }
+  });
+  return series;
+}
 
 export async function getSerie(serieId) {
   try {
@@ -199,84 +199,79 @@ export async function getLatestSeriesByGenre(genreId, series_number) {
   }
 }
 
-export async function sortSeriesByTime(series, runtime) {
+export async function getSerieRuntime(serie) {
   const filteredSeries = [];
-  for (const serie of series) {
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/tv/${serie.id}?api_key=${
-          import.meta.env.VITE_API_KEY
-        }&language=fr-FR`
-      );
-      if (!response.ok) {
-        throw new Error("Erreur lors de la requête");
-      }
-      const data = await response.json();
-
-      const episodeRuntimes = data.episode_run_time;
-      const averageRuntime =
-        episodeRuntimes.reduce((acc, cur) => acc + cur, 0) /
-        episodeRuntimes.length;
-
-      if (averageRuntime < runtime) {
-        filteredSeries.push(serie);
-      }
-    } catch (error) {
-      console.error("Erreur lors du tri des séries par durée moyenne:", error);
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/tv/${serie}?api_key=${
+        import.meta.env.VITE_API_KEY
+      }&language=fr-FR`
+    );
+    if (!response.ok) {
+      throw new Error("Erreur lors de la requête");
     }
+    const data = await response.json();
+
+    const episodeRuntimes = data.episode_run_time;
+    const averageRuntime =
+      episodeRuntimes.reduce((acc, cur) => acc + cur, 0) /
+      episodeRuntimes.length;
+
+    return averageRuntime;
+  } catch (error) {
+    console.error("Erreur lors du tri des séries par durée moyenne:", error);
   }
   return filteredSeries;
 }
 
-export async function sortSeriesByGenres(selectedGenres, max_page) {
+export async function sortSeriesByMatch(genres, date, runtime, series_number) {
   try {
-    let genresSeries = [];
+    let matchSeries = [];
     let uniqueNames = {};
+    let max_page = 1;
+    let selectedAge = "";
+    if (date === "young") {
+      selectedAge = `&first_release_date.gte=${getDate(264)}`;
+    } else if (date === "old") {
+      selectedAge = `&first_release_date.lte=${getDate(264)}`;
+    }
 
-    for (let page = 1; page <= max_page; page++) {
+    while (matchSeries.length < series_number) {
+      const selectedGenres = genres.join(",");
       const response = await fetch(
         `https://api.themoviedb.org/3/discover/tv?api_key=${
           import.meta.env.VITE_API_KEY
-        }&language=fr-FR&page=${page}`
+        }&language=fr-FR&page=${max_page}&with_genres=${selectedGenres}${selectedAge}`
       );
       if (!response.ok) {
         throw new Error("Erreur lors de la requête");
       }
-      const data = await response.json();
-      const matchGenres = data.results.filter((serie) => {
-        return selectedGenres.every((genreId) =>
-          serie.genre_ids.includes(genreId)
-        );
-      });
 
-      genresSeries.push(...matchGenres);
-    }
-    genresSeries = genresSeries.filter((serie) => {
-      if (!uniqueNames[serie.name]) {
-        uniqueNames[serie.name] = true;
-        return true;
+      const data = await response.json();
+      const pageResults = data.results.filter((serie) => {
+        if (!uniqueNames[serie.name]) {
+          uniqueNames[serie.name] = true;
+          return true;
+        }
+        return false;
+      });
+      for (const serie of pageResults) {
+        const serieRuntime = await getSerieRuntime(serie.id);
+        if (serieRuntime !== null && serieRuntime <= runtime) { 
+          const serieWithRuntime = {
+            ...serie,
+            runtime: serieRuntime
+          };
+          matchSeries.push(serieWithRuntime);
+        }
       }
-      return false;
-    });
-    return genresSeries;
+
+      max_page++;
+    }
+    return matchSeries;
   } catch (error) {
     console.error("Erreur lors du fetch de la requête:", error);
   }
-}
-
-export async function sortSeriesByDate(series, date) {
-  let SeriesDate = [];
-  const limitDate = await getDate(264);
-
-  if (date === "young") {
-    SeriesDate = series.filter((serie) => serie.first_air_date > limitDate);
-  } else if (date === "old") {
-    SeriesDate = series.filter((serie) => serie.first_air_date < limitDate);
-  } else {
-    SeriesDate = series;
-  }
-
-  return SeriesDate;
 }
 
 export async function getTrendSeriesByYear(year, series_number) {
