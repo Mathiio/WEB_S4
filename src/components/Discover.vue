@@ -190,7 +190,7 @@ export default {
     },
     methods: {
         redirectToMedia(mediaId) {
-            this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
+            this.$router.push({ name: 'Media', params: { id: mediaId } });
         },
         async retrieveGenres() {
             const entityAPI = getEntityAPI(this.selectedMedia);

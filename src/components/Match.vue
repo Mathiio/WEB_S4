@@ -12,7 +12,7 @@
                 <h2>Ton genre préféré ?</h2>
                 <div id="genre_selector">
                     <div class="wrapper">
-                        <Splide :options="{ rewind: true, autoplay: true, pagination: false }">
+                        <Splide :options="{ loop: true, autoplay: true, pagination: false }">
                             <SplideSlide v-for="genre in genres" :key="genre.id" class="custom_select">
                                 <input type="checkbox" :value="genre.id" v-model="selectedGenres">
                                 <span>{{ genre.name }}</span>
@@ -427,13 +427,13 @@ form {
 
 
 <script>
-import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
 import { getEntityAPI } from '@services/interface.js'
 import OldPicto from '@assets/svg/OldPicto.vue';
 import YoungPicto from '@assets/svg/YoungPicto.vue';
 import MidAgePicto from '@assets/svg/MidAgePicto.vue';
-import { getImageUrl, formatDate, formatVote } from '@services/utils.js'
+import { formatDate } from '@services/utils.js'
 
 
 
@@ -474,7 +474,7 @@ export default {
     },
     methods: {
         redirectToMedia(mediaId) {
-            this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
+            this.$router.push({ name: 'Media', params: { id: mediaId } });
         },
         async retrieveGenres() {
             const entityAPI = getEntityAPI(this.selectedMedia);

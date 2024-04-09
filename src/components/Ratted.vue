@@ -108,7 +108,7 @@ h2 {
 <script>
 import { getEntityAPI } from '@services/interface.js';
 import { getRandomYear } from '@services/utils.js';
-import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
 import MidCard from '@components/cards/MidCard.vue';
 import MidCardSkeleton from '@components/cards/MidCardSkeleton.vue';
@@ -156,7 +156,7 @@ export default {
     },
     methods: {
         redirectToMedia(mediaId) {
-            this.$router.push({ name: 'MediaPrev', params: { id: mediaId } });
+            this.$router.push({ name: 'Media', params: { id: mediaId } });
         },
         async getYear() {
             this.year = await getRandomYear();

@@ -3,7 +3,7 @@
     <div class="img_poster"
       :style="'background:url(' + getImageUrl(media.poster_path) + ') center center; background-size: cover;'"></div>
     <div class="card_infos">
-      <h3 class="one-line">
+      <h3 class="one_line">
         <div class="bg_oneline"></div>
         <span>{{ selectedMedia === 'films' ? media.title : media.name }}</span>
       </h3>
@@ -96,7 +96,7 @@
   margin-left: 4px;
 }
 
-.one-line {
+.one_line {
   width: 100%;
   display: inline-block;
   white-space: nowrap;
@@ -104,7 +104,7 @@
   position: relative;
 }
 
-.one-line:not(:hover) {
+.one_line:not(:hover) {
   text-overflow: ellipsis;
 }
 
@@ -117,8 +117,8 @@
   z-index: 3;
 }
 
-.one-line:hover span,
-.one-line:focus span {
+.one_line:hover span,
+.one_line:focus span {
   display: inline-block;
   animation-name: scroll-text;
   animation-duration: 7s;

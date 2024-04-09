@@ -2,7 +2,7 @@
   <SplideSlide class="splide__slide min_card">
     <div class="img_poster skeleton"></div>
     <div class="card_infos">
-      <h3 class="one-line skeleton">
+      <h3 class="skeleton">
       </h3>
       <span class="skeleton">
       </span>

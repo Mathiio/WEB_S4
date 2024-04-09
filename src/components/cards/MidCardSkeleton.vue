@@ -2,7 +2,7 @@
   <SplideSlide class="splide__slide mid_card">
     <div class="img_banner skeleton"></div>
     <div class="card_infos">
-      <h3 class="one-line skeleton">
+      <h3 class="skeleton">
       </h3>
       <span class="skeleton">
       </span>

@@ -102,12 +102,12 @@ export default {
         };
     },
     created() {
-        this.isMediaPrevPage = this.$route.name === 'MediaPrev';
+        this.isMediaPrevPage = this.$route.name === 'Media';
         this.$emit('media-selected', localStorage.getItem('selectedMedia') || 'films');
     },
     watch: {
         $route(to, from) {
-            this.isMediaPrevPage = to.name === 'MediaPrev';
+            this.isMediaPrevPage = to.name === 'Media';
         },
         selectedMedia(newValue) {
             localStorage.setItem('selectedMedia', newValue);
